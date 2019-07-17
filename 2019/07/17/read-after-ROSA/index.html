@@ -105,7 +105,7 @@
 <meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/image/E4.png">
 <meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/image/algorithm1.png">
 <meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/image/flow.png">
-<meta property="og:updated_time" content="2019-07-17T18:02:55.263Z">
+<meta property="og:updated_time" content="2019-07-17T18:11:30.350Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="read after ROSA">
 <meta name="twitter:description" content="精读ROSA  本人首次阅读CV方向论文，部分转有名词翻译存误，见谅   Abstract  在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。   提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic">
@@ -362,7 +362,7 @@
                 
               
 
-              <time title="创建时间：2019-07-17 00:49:11 / 修改时间：18:02:55" itemprop="dateCreated datePublished" datetime="2019-07-17T00:49:11Z">2019-07-17</time>
+              <time title="创建时间：2019-07-17 00:49:11 / 修改时间：18:11:30" itemprop="dateCreated datePublished" datetime="2019-07-17T00:49:11Z">2019-07-17</time>
             </span>
           
 
@@ -425,7 +425,7 @@
 <ul>
 <li>本人首次阅读CV方向论文，部分转有名词翻译存误，见谅</li>
 </ul>
-<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h2>
+<h1 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h1>
 <blockquote>
 <p>在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。</p>
 </blockquote>
@@ -439,35 +439,35 @@
 </ol>
 </blockquote>
 <hr>
-<h2 id="introdutction"><a class="markdownIt-Anchor" href="#introdutction"></a> Introdutction</h2>
+<h1 id="introdutction"><a class="markdownIt-Anchor" href="#introdutction"></a> Introdutction</h1>
 <p>近年由于CNN的发展，大量数据集下训练的深度CNN在显著物体识别上的应用变得可行。在物体识别方向上主流有两个做法</p>
 <ul>
 <li>分段标记<code>segment-wise</code>：将图像分割成多个区域，同一区域内的像素会有相同的显著分数,随后提取区域的CNN特征来评估显著性</li>
 <li>像素级标记<code>pixel-wise</code>：根据像素不同而标记不同的显著分数，常用FCN架构，输入完整图像并获得密集特征图作为输出，基于端对端的训练使其拥有最优秀的准确率。</li>
 </ul>
-<h3 id="基于fcn的方法会引出以下问题"><a class="markdownIt-Anchor" href="#基于fcn的方法会引出以下问题"></a> 基于FCN的方法会引出以下问题：</h3>
+<h2 id="基于fcn的方法会引出以下问题"><a class="markdownIt-Anchor" href="#基于fcn的方法会引出以下问题"></a> 基于FCN的方法会引出以下问题：</h2>
 <ul>
 <li>端对端的训练使梯度轻易从监督目标传向输入图像，i.e.具体而言，输入图像少许的变化或噪音就会导致特征图的变化这也导致这类模型有被对抗噪音attack的风险。</li>
 <li>此类密集标记的模型不能显性的模拟出图像不同部分的区别(模型存在不可解释性)，而是隐性的计算像素的显著性，当输入图像被对抗噪声污染后，就无法正确识别出其低级特征以及高层次特征。</li>
 <li>目前最大的数据集也不过只有几千张图片，数据集缺乏，标注的物体类别也同样十分有限，导致识别的物体大部分都是训练集中出现的，i.e.图像识别的泛化能力不足。过分依赖捕捉到的高层次特征，因此对初级特征很敏感，低级特征被噪声干扰就会严重影响效果</li>
 </ul>
-<h3 id="segment-wise级别的标记方法则有较强的鲁棒性"><a class="markdownIt-Anchor" href="#segment-wise级别的标记方法则有较强的鲁棒性"></a> <code>segment-wise</code>级别的标记方法则有较强的鲁棒性。</h3>
+<h2 id="segment-wise级别的标记方法则有较强的鲁棒性"><a class="markdownIt-Anchor" href="#segment-wise级别的标记方法则有较强的鲁棒性"></a> <code>segment-wise</code>级别的标记方法则有较强的鲁棒性。</h2>
 <p>其对图像中的区分进行了显性的建模，即根据情境、区域等多区域，对区域进行显着性打分。对于不同段，由相同目标计算而来的梯度会冲突(不同区域可能共享同一种情境)。<strong>然而，在实验中对于稀疏标记的模型，因为要评价几百个的分段所以是低效的</strong></p>
-<h3 id="为提高密集标记模型的鲁棒性而提出rosa"><a class="markdownIt-Anchor" href="#为提高密集标记模型的鲁棒性而提出rosa"></a> 为提高密集标记模型的鲁棒性而提出ROSA</h3>
+<h2 id="为提高密集标记模型的鲁棒性而提出rosa"><a class="markdownIt-Anchor" href="#为提高密集标记模型的鲁棒性而提出rosa"></a> 为提高密集标记模型的鲁棒性而提出ROSA</h2>
 <ul>
 <li>对抗噪声由BP(<code>backward propagation</code>)计算而来，且会生成细长的曲线，只针对神经网络模型</li>
 <li>CNN对通用噪声(<code>generic noise</code>)不敏感</li>
 <li>拥有相同低级特征的相邻像素拥有相似的显着分数</li>
 </ul>
 <hr>
-<h3 id="综上rosa对图像加入generic-noise来破坏对抗噪声对此适应性地预测出特征图以对抗引入的噪声"><a class="markdownIt-Anchor" href="#综上rosa对图像加入generic-noise来破坏对抗噪声对此适应性地预测出特征图以对抗引入的噪声"></a> <strong>综上：ROSA对图像加入<code>generic noise</code>来破坏对抗噪声，对此适应性地预测出特征图以对抗引入的噪声</strong></h3>
+<h2 id="综上rosa对图像加入generic-noise来破坏对抗噪声对此适应性地预测出特征图以对抗引入的噪声"><a class="markdownIt-Anchor" href="#综上rosa对图像加入generic-noise来破坏对抗噪声对此适应性地预测出特征图以对抗引入的噪声"></a> <strong>综上：ROSA对图像加入<code>generic noise</code>来破坏对抗噪声，对此适应性地预测出特征图以对抗引入的噪声</strong></h2>
 <ul>
 <li><strong>分段屏蔽组件</strong>(<code>segement-wise shielding component</code>)，在网络前加入，根据低相似性在区域内部随机打乱像素，不易破坏分段的边界，引入<code>generic</code>噪声破坏对抗噪声中的结构形式(前文所说的曲线)。</li>
 <li><strong>情境感知复原组件</strong>(<code>context-aware restoration component</code>)，在网络后加入，根据原图片(加入噪声前)的像素值及情境对输出的显着分数进行调整，并行计算提高效率。</li>
 </ul>
 <hr>
-<h2 id="method-实现"><a class="markdownIt-Anchor" href="#method-实现"></a> Method 实现</h2>
-<h3 id="对抗样本生成"><a class="markdownIt-Anchor" href="#对抗样本生成"></a> 对抗样本生成</h3>
+<h1 id="method-实现"><a class="markdownIt-Anchor" href="#method-实现"></a> Method 实现</h1>
+<h2 id="对抗样本生成"><a class="markdownIt-Anchor" href="#对抗样本生成"></a> 对抗样本生成</h2>
 <p><img src="image/E3.png" alt=""><br>
 <img src="image/E4.png" alt=""><br>
 <img src="image/algorithm1.png" alt=""></p>
@@ -480,7 +480,7 @@
 <li>扰动p需要进行归一化，并乘上α作为修正的步长</li>
 </ul>
 <p>以此得出对抗扰乱的图作为后续输入</p>
-<h3 id="rosa实现"><a class="markdownIt-Anchor" href="#rosa实现"></a> ROSA实现</h3>
+<h2 id="rosa实现"><a class="markdownIt-Anchor" href="#rosa实现"></a> ROSA实现</h2>
 <p><img src="image/flow.png" alt=""><br>
 巧妙之处：</p>
 <ul>
@@ -488,21 +488,21 @@
 <li>以毒攻毒:加入<code>generic</code>噪声去破坏对抗噪声的模式(<code>pattern</code>)使其失效</li>
 <li>将毒排出：加入情境感知组件将特征图复原</li>
 </ul>
-<h4 id="分段屏蔽组件"><a class="markdownIt-Anchor" href="#分段屏蔽组件"></a> 分段屏蔽组件</h4>
+<h2 id="分段屏蔽组件"><a class="markdownIt-Anchor" href="#分段屏蔽组件"></a> 分段屏蔽组件</h2>
 <p>CNN对对抗噪声以外的噪声不敏感且容易适应，故可反其道行之加入其它噪声，同时为了减少噪声影响，需先<strong>对超像素区域内像素打乱</strong>，超像素选取则由K-mean聚类实现</p>
-<h4 id="情境感知复原组件"><a class="markdownIt-Anchor" href="#情境感知复原组件"></a> 情境感知复原组件</h4>
+<h2 id="情境感知复原组件"><a class="markdownIt-Anchor" href="#情境感知复原组件"></a> 情境感知复原组件</h2>
 <p>根据原图像素间低等级的相似性来对特征图进行修复，完全基于图的建模，不依赖于CNN架构。由于恢复组件利用全局上下文来细化结果，因此通过一些有限扰动强度的对抗性噪声来改变预测更加困难。</p>
-<h4 id="训练"><a class="markdownIt-Anchor" href="#训练"></a> 训练</h4>
+<h2 id="训练"><a class="markdownIt-Anchor" href="#训练"></a> 训练</h2>
 <p>训练参数可参照原文，不作解释。只作关键部分说明，其中分段屏蔽组件没有参数不作训练，而情感复原组件则需要与核心预训练的FCN一起进行微调，迭代EPOCHs都不超过5，<strong>为提高针对不同对抗干扰的泛化能力，微调的样本不加入对抗样本</strong></p>
 <hr>
-<h2 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h2>
+<h1 id="conclusion"><a class="markdownIt-Anchor" href="#conclusion"></a> Conclusion</h1>
 <ul>
 <li>文章大量的图片效果以及数据结果，碍于博客篇幅没有一一展示，完全可以通过阅读原文进行查看(链接见参考文献)，也不进行相应的讨论</li>
 <li>ROSA定位更像一个插件、组件，可在已有的FCN模型上进行补充已增加鲁棒性以抵抗对抗干扰。ROSA与FCN无关，而是深度模型以外的预处理以及后处理，即插即用与中间模型依赖不大</li>
 <li>反其道行之，以毒攻毒，用模型不敏感的噪声去破坏对抗干扰的噪声</li>
 </ul>
 <hr>
-<h2 id="references"><a class="markdownIt-Anchor" href="#references"></a> References</h2>
+<h1 id="references"><a class="markdownIt-Anchor" href="#references"></a> References</h1>
 <p>Li H, Li G, Yu Y. ROSA: Robust Salient Object Detection Against Adversarial Attacks[J]. IEEE transactions on cybernetics, 2019. Availble: <a href="https://arxiv.org/abs/1905.03434" target="_blank" rel="noopener">https://arxiv.org/abs/1905.03434</a></p>
 
       
@@ -710,7 +710,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#精读rosa"><span class="nav-number">1.</span> <span class="nav-text"> 精读ROSA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.1.</span> <span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introdutction"><span class="nav-number">1.2.</span> <span class="nav-text"> Introdutction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于fcn的方法会引出以下问题"><span class="nav-number">1.2.1.</span> <span class="nav-text"> 基于FCN的方法会引出以下问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#segment-wise级别的标记方法则有较强的鲁棒性"><span class="nav-number">1.2.2.</span> <span class="nav-text"> segment-wise级别的标记方法则有较强的鲁棒性。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为提高密集标记模型的鲁棒性而提出rosa"><span class="nav-number">1.2.3.</span> <span class="nav-text"> 为提高密集标记模型的鲁棒性而提出ROSA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#综上rosa对图像加入generic-noise来破坏对抗噪声对此适应性地预测出特征图以对抗引入的噪声"><span class="nav-number">1.2.4.</span> <span class="nav-text"> 综上：ROSA对图像加入generic noise来破坏对抗噪声，对此适应性地预测出特征图以对抗引入的噪声</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#method-实现"><span class="nav-number">1.3.</span> <span class="nav-text"> Method 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对抗样本生成"><span class="nav-number">1.3.1.</span> <span class="nav-text"> 对抗样本生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rosa实现"><span class="nav-number">1.3.2.</span> <span class="nav-text"> ROSA实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分段屏蔽组件"><span class="nav-number">1.3.2.1.</span> <span class="nav-text"> 分段屏蔽组件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#情境感知复原组件"><span class="nav-number">1.3.2.2.</span> <span class="nav-text"> 情境感知复原组件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#训练"><span class="nav-number">1.3.2.3.</span> <span class="nav-text"> 训练</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conclusion"><span class="nav-number">1.4.</span> <span class="nav-text"> Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">1.5.</span> <span class="nav-text"> References</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#精读rosa"><span class="nav-number">1.</span> <span class="nav-text"> 精读ROSA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#abstract"><span class="nav-number">2.</span> <span class="nav-text"> Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#introdutction"><span class="nav-number">3.</span> <span class="nav-text"> Introdutction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于fcn的方法会引出以下问题"><span class="nav-number">3.1.</span> <span class="nav-text"> 基于FCN的方法会引出以下问题：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#segment-wise级别的标记方法则有较强的鲁棒性"><span class="nav-number">3.2.</span> <span class="nav-text"> segment-wise级别的标记方法则有较强的鲁棒性。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为提高密集标记模型的鲁棒性而提出rosa"><span class="nav-number">3.3.</span> <span class="nav-text"> 为提高密集标记模型的鲁棒性而提出ROSA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#综上rosa对图像加入generic-noise来破坏对抗噪声对此适应性地预测出特征图以对抗引入的噪声"><span class="nav-number">3.4.</span> <span class="nav-text"> 综上：ROSA对图像加入generic noise来破坏对抗噪声，对此适应性地预测出特征图以对抗引入的噪声</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#method-实现"><span class="nav-number">4.</span> <span class="nav-text"> Method 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对抗样本生成"><span class="nav-number">4.1.</span> <span class="nav-text"> 对抗样本生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rosa实现"><span class="nav-number">4.2.</span> <span class="nav-text"> ROSA实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分段屏蔽组件"><span class="nav-number">4.3.</span> <span class="nav-text"> 分段屏蔽组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#情境感知复原组件"><span class="nav-number">4.4.</span> <span class="nav-text"> 情境感知复原组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练"><span class="nav-number">4.5.</span> <span class="nav-text"> 训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#conclusion"><span class="nav-number">5.</span> <span class="nav-text"> Conclusion</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#references"><span class="nav-number">6.</span> <span class="nav-text"> References</span></a></li></ol></div>
             
 
           </div>
