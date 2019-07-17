@@ -93,18 +93,18 @@
   };
 </script>
 
-  <meta name="description" content="test">
-<meta name="keywords" content="deep_learning,computer_vision">
+  <meta name="description" content="精读ROSA 本人首次阅读CV方向论文，部分转有名词翻译存误，见谅  Abstract 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。   提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic noi">
+<meta name="keywords" content="deep_learning,computer_vision,adversarial_attack,salient_object_detection">
 <meta property="og:type" content="article">
 <meta property="og:title" content="read after ROSA">
 <meta property="og:url" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/index.html">
 <meta property="og:site_name" content="Blog4Cung">
-<meta property="og:description" content="test">
+<meta property="og:description" content="精读ROSA 本人首次阅读CV方向论文，部分转有名词翻译存误，见谅  Abstract 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。   提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic noi">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-16T17:19:00.038Z">
+<meta property="og:updated_time" content="2019-07-17T08:33:24.446Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="read after ROSA">
-<meta name="twitter:description" content="test">
+<meta name="twitter:description" content="精读ROSA 本人首次阅读CV方向论文，部分转有名词翻译存误，见谅  Abstract 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。   提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic noi">
 
 
 
@@ -357,23 +357,13 @@
                 
               
 
-              <time title="创建时间：2019-07-17 00:49:11" itemprop="dateCreated datePublished" datetime="2019-07-17T00:49:11Z">2019-07-17</time>
+              <time title="创建时间：2019-07-17 00:49:11 / 修改时间：08:33:24" itemprop="dateCreated datePublished" datetime="2019-07-17T00:49:11Z">2019-07-17</time>
             </span>
           
 
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-16 17:19:00" itemprop="dateModified" datetime="2019-07-16T17:19:00Z">2019-07-16</time>
-              </span>
             
           
 
@@ -426,7 +416,45 @@
       
 
       
-        <p>test</p>
+        <h1 id="精读ROSA"><a href="#精读ROSA" class="headerlink" title="精读ROSA"></a>精读ROSA</h1><ul>
+<li>本人首次阅读CV方向论文，部分转有名词翻译存误，见谅</li>
+</ul>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><blockquote>
+<p>在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。</p>
+</blockquote>
+<blockquote>
+<p>提出ROSA(端对端可训练)提高基于FCN(<code>Fully convolution network</code>)的显著物体预测的鲁棒性</p>
+<ol>
+<li>引入通用噪声破坏对抗扰乱</li>
+<li>对输入图片加了噪声(<code>generic noise</code>)后的图片，学习预测其特征图</li>
+<li>加入段屏蔽组件，保护图形边界并破坏特殊设置的(<code>delicate</code>)对抗噪声</li>
+<li>加入情感感知的复原组件，通过全局对比度的建模来完善特征图</li>
+</ol>
+</blockquote>
+<hr>
+<h2 id="Introdutction"><a href="#Introdutction" class="headerlink" title="Introdutction"></a>Introdutction</h2><p>近年由于CNN的发展，大量数据集下训练的深度CNN在显著物体识别上的应用变得可行。在物体识别方向上主流有两个做法</p>
+<ul>
+<li>分段标记<code>segment-wise</code>：将图像分割成多个区域，同一区域内的像素会有相同的显著分数,随后提取区域的CNN特征来评估显著性</li>
+<li>像素级标记<code>pixel-wise</code>：根据像素不同而标记不同的显著分数，常用FCN架构，输入完整图像并获得密集特征图作为输出，基于端对端的训练使其拥有最优秀的准确率。</li>
+</ul>
+<h3 id="基于FCN的方法会引出以下问题："><a href="#基于FCN的方法会引出以下问题：" class="headerlink" title="基于FCN的方法会引出以下问题："></a>基于FCN的方法会引出以下问题：</h3><ul>
+<li>端对端的训练使梯度轻易从监督目标传向输入图像，i.e.具体而言，输入图像少许的变化或噪音就会导致特征图的变化这也导致这类模型有被对抗噪音attack的风险。</li>
+<li>此类密集标记的模型不能显性的模拟出图像不同部分的区别(模型存在不可解释性)，而是隐性的计算像素的显著性，当输入图像被对抗噪声污染后，就无法正确识别出其低级特征以及高层次特征。</li>
+<li>目前最大的数据集也不过只有几千张图片，数据集缺乏，标注的物体类别也同样十分有限，导致识别的物体大部分都是训练集中出现的，i.e.图像识别的泛化能力不足。过分依赖捕捉到的高层次特征，因此对初级特征很敏感，低级特征被噪声干扰就会严重影响效果</li>
+</ul>
+<h3 id="segment-wise级别的标记方法则有较强的鲁棒性。"><a href="#segment-wise级别的标记方法则有较强的鲁棒性。" class="headerlink" title="segment-wise级别的标记方法则有较强的鲁棒性。"></a><code>segment-wise</code>级别的标记方法则有较强的鲁棒性。</h3><p>其对图像中的区分进行了显性的建模，即根据情境、区域等多区域，对区域进行显着性打分。对于不同段，由相同目标计算而来的梯度会冲突(不同区域可能共享同一种情境)。<strong>然而，在实验中用稀疏标记的方法因为要评价几百个的分段所以是低效的</strong></p>
+<h3 id="为提高密集标记模型的鲁棒性而提出ROSA"><a href="#为提高密集标记模型的鲁棒性而提出ROSA" class="headerlink" title="为提高密集标记模型的鲁棒性而提出ROSA"></a>为提高密集标记模型的鲁棒性而提出ROSA</h3><ul>
+<li>对抗噪声由BP(<code>backward propagation</code>)计算而来，且会生成细长的曲线，只针对神经网络模型</li>
+<li>CNN对通用噪声(<code>generic noise</code>)不敏感</li>
+<li>拥有相同低级特征的相邻像素拥有相似的显着分数</li>
+</ul>
+<hr>
+<p><strong>综上：ROSA对图像加入<code>generic noise</code>来破坏对抗噪声，对此适应性地预测出特征图以对抗引入的噪声</strong></p>
+<ul>
+<li>分段屏蔽组件，在网络前加入，根据低相似性在区域内部随机打乱像素，不易破坏分段的边界，引入<code>generic</code>噪声破坏对抗噪声中的结构形式(前文所说的曲线)。</li>
+<li>情境感知复原组件，在网络后加入，根据原图片(加入噪声前)的像素值及情境对输出的显着分数进行调整，并行计算提高效率。</li>
+</ul>
+<hr>
 
       
     </div>
@@ -460,6 +488,10 @@
             <a href="/tags/deep-learning/" rel="tag"># deep_learning</a>
           
             <a href="/tags/computer-vision/" rel="tag"># computer_vision</a>
+          
+            <a href="/tags/adversarial-attack/" rel="tag"># adversarial_attack</a>
+          
+            <a href="/tags/salient-object-detection/" rel="tag"># salient_object_detection</a>
           
         </div>
       
@@ -524,8 +556,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
 
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -581,7 +622,11 @@
         
           
         
-        <span class="site-state-item-count">2</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -605,6 +650,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#精读ROSA"><span class="nav-number">1.</span> <span class="nav-text">精读ROSA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introdutction"><span class="nav-number">1.2.</span> <span class="nav-text">Introdutction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于FCN的方法会引出以下问题："><span class="nav-number">1.2.1.</span> <span class="nav-text">基于FCN的方法会引出以下问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#segment-wise级别的标记方法则有较强的鲁棒性。"><span class="nav-number">1.2.2.</span> <span class="nav-text">segment-wise级别的标记方法则有较强的鲁棒性。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为提高密集标记模型的鲁棒性而提出ROSA"><span class="nav-number">1.2.3.</span> <span class="nav-text">为提高密集标记模型的鲁棒性而提出ROSA</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
