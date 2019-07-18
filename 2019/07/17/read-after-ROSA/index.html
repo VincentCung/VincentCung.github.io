@@ -105,7 +105,9 @@
 <meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/image/E4.png">
 <meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/image/algorithm1.png">
 <meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/image/flow.png">
-<meta property="og:updated_time" content="2019-07-17T18:11:30.350Z">
+<meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/image/E5.png">
+<meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/image/E6.png">
+<meta property="og:updated_time" content="2019-07-18T07:04:21.344Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="read after ROSA">
 <meta name="twitter:description" content="精读ROSA  本人首次阅读CV方向论文，部分转有名词翻译存误，见谅   Abstract  在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。   提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic">
@@ -362,13 +364,23 @@
                 
               
 
-              <time title="创建时间：2019-07-17 00:49:11 / 修改时间：18:11:30" itemprop="dateCreated datePublished" datetime="2019-07-17T00:49:11Z">2019-07-17</time>
+              <time title="创建时间：2019-07-17 00:49:11" itemprop="dateCreated datePublished" datetime="2019-07-17T00:49:11Z">2019-07-17</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-18 07:04:21" itemprop="dateModified" datetime="2019-07-18T07:04:21Z">2019-07-18</time>
+              </span>
             
           
 
@@ -489,9 +501,20 @@
 <li>将毒排出：加入情境感知组件将特征图复原</li>
 </ul>
 <h2 id="分段屏蔽组件"><a class="markdownIt-Anchor" href="#分段屏蔽组件"></a> 分段屏蔽组件</h2>
-<p>CNN对对抗噪声以外的噪声不敏感且容易适应，故可反其道行之加入其它噪声，同时为了减少噪声影响，需先<strong>对超像素区域内像素打乱</strong>，超像素选取则由K-mean聚类实现</p>
+<p>CNN对对抗噪声以外的噪声不敏感且容易适应，故可反其道行之加入其它噪声，同时为了减少噪声影响，需先选取超像素，并由聚类实现</p>
+<blockquote>
+<p>Specifically, k cluster centers in the joint space of color and pixel position are initialized by sampling pixels at regular grid steps. Then, we assign each pixel to the cluster center with minimum distance and update each cluster center as the mean vector of pixels belonging to the cluster, in an iterative way. The iteration ends when L2-norm error between new location and previous location of each cluster center converges.<br>
+经规则化网格取样像素的颜色、位置初始化聚类中心，离中心最近的像素并入簇中并更新用簇中像素平均向量来更新中心，不断迭代至原中心与新中心的L2范数误差收敛。</p>
+</blockquote>
+<p><strong>对超像素内部的像素进行打乱以达到引入噪声的目的</strong>，没有选择以平均像素值的方法来平滑化超像素，是为了提供可复原噪声的可能性、且平均的方法<strong>不易让FCN捕获高级语义</strong>，<br>
+噪声的引入其实减少了过拟合的问题以及增强数据集的效果。</p>
 <h2 id="情境感知复原组件"><a class="markdownIt-Anchor" href="#情境感知复原组件"></a> 情境感知复原组件</h2>
-<p>根据原图像素间低等级的相似性来对特征图进行修复，完全基于图的建模，不依赖于CNN架构。由于恢复组件利用全局上下文来细化结果，因此通过一些有限扰动强度的对抗性噪声来改变预测更加困难。</p>
+<p>由于对抗干扰所针对的就是卷积窗口的参数，为避开这个问题，恢复组件根据原图像素间的低级相似性来对特征图进行修复、优化，完全基于图的建模，不依赖于CNN架构。由于恢复组件利用全局上下文来细化结果，因此通过一些有限扰动强度的对抗性噪声来改变预测更加困难。<br>
+原理则是最下化以下的能量函数<br>
+<img src="image/E5.png" alt=""></p>
+<p>y*指结果的特征图，而y指原标记的特征图，能量函数本质就是测量粗略计算图与目标图的区别cost，以及图内像素间的cost，越接近的像素理应值越接近则能量函数越小</p>
+<p><img src="image/E6.png" alt=""><br>
+其中ω、μ均是由训练学习而来，μ是标签兼容性函数(<code>label compatibility function</code>)，用于对参数的标签不一致时的惩罚</p>
 <h2 id="训练"><a class="markdownIt-Anchor" href="#训练"></a> 训练</h2>
 <p>训练参数可参照原文，不作解释。只作关键部分说明，其中分段屏蔽组件没有参数不作训练，而情感复原组件则需要与核心预训练的FCN一起进行微调，迭代EPOCHs都不超过5，<strong>为提高针对不同对抗干扰的泛化能力，微调的样本不加入对抗样本</strong></p>
 <hr>
@@ -503,7 +526,14 @@
 </ul>
 <hr>
 <h1 id="references"><a class="markdownIt-Anchor" href="#references"></a> References</h1>
+<ul>
+<li>
 <p>Li H, Li G, Yu Y. ROSA: Robust Salient Object Detection Against Adversarial Attacks[J]. IEEE transactions on cybernetics, 2019. Availble: <a href="https://arxiv.org/abs/1905.03434" target="_blank" rel="noopener">https://arxiv.org/abs/1905.03434</a></p>
+</li>
+<li>
+<p>Zheng S, Jayasumana S, Romera-Paredes B, et al. Conditional random fields as recurrent neural networks[C]//Proceedings of the IEEE international conference on computer vision. 2015: 1529-1537. Availble: <a href="https://arxiv.org/abs/1502.03240" target="_blank" rel="noopener">https://arxiv.org/abs/1502.03240</a></p>
+</li>
+</ul>
 
       
     </div>
