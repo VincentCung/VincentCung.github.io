@@ -3,11 +3,17 @@ title: read after ROSA
 date: 2019-07-17 00:49:11
 tags: [deep_learning,computer_vision,adversarial_attack,salient_object_detection]
 categories: AI
+mathjax: true
 ---
 
 # 精读ROSA
 
-- 本人首次阅读CV方向论文，部分转有名词翻译存误，见谅
+$$e =mc^2$$
+
+---
+$$\frac{x+1}{\sqrt{1-x2sdf}}$$
+
+本人首次阅读CV方向论文，部分转有名词翻译存误，见谅
 
 # Abstract
 > 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。
@@ -48,9 +54,12 @@ categories: AI
 
 ## 对抗样本生成
 
-![](image/E3.png)
-![](image/E4.png)
-![](image/algorithm1.png)
+{% asset_img E3.png [E3] %}
+{% asset_img E4.png [E4] %}
+{% asset_img algorithm1.png algorithm1 %}
+<!-- ![](read-after-ROSA/E3.png)
+![](read-after-ROSA/E4.png)
+![](read-after-ROSA/algorithm1.png) -->
 
 > 此处latex暂时无法渲染，故只能截图。碍于无法使用latex，算法变量不作详细介绍，只作算法部分说明，若需理解请阅读原文
 - 原图每次迭代添加上`lost Function`对当前迭代的梯度使其向`lost function`上升的方向
@@ -60,7 +69,8 @@ categories: AI
 以此得出对抗扰乱的图作为后续输入
 
 ## ROSA实现
-![](image/flow.png)
+{% asset_img flow.png [flow] %}
+<!-- ![](read-after-ROSA/flow.png) -->
 巧妙之处：
 - 不同于传统反对抗方式，传统方式是通过平滑化等手段尽可能减少对抗噪声的影响。
 - 以毒攻毒:加入`generic`噪声去破坏对抗噪声的模式(`pattern`)使其失效
@@ -78,11 +88,13 @@ CNN对对抗噪声以外的噪声不敏感且容易适应，故可反其道行�
 ## 情境感知复原组件
 由于对抗干扰所针对的就是卷积窗口的参数，为避开这个问题，恢复组件根据原图像素间的低级相似性来对特征图进行修复、优化，完全基于图的建模，不依赖于CNN架构。由于恢复组件利用全局上下文来细化结果，因此通过一些有限扰动强度的对抗性噪声来改变预测更加困难。
 原理则是最下化以下的能量函数
-![](image/E5.png)
+{% asset_img E5.png [E5] %}
+<!-- ![](image/E5.png) -->
 
 y*指结果的特征图，而y指原标记的特征图，能量函数本质就是测量粗略计算图与目标图的区别cost，以及图内像素间的cost，越接近的像素理应值越接近则能量函数越小
 
-![](image/E6.png)
+{% asset_img E6.png [E6] %}
+<!-- ![](image/E6.png) -->
 其中ω、μ均是由训练学习而来，μ是标签兼容性函数(`label compatibility function`)，用于对参数的标签不一致时的惩罚
 
 ## 训练

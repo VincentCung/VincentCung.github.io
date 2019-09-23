@@ -34,7 +34,7 @@ favicon: /favicon.ico
 
 # Avatar (put the image into next/source/images/)
 # can be any image format supported by web browsers (JPEG,PNG,GIF,SVG,..)
-avatar: /default_avatar.png
+avatar: /avatar.gif
 
 # Code highlight theme
 # available: normal | night | night eighties | night blue | night bright
@@ -54,7 +54,7 @@ titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
