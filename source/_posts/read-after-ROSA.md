@@ -8,11 +8,6 @@ mathjax: true
 
 # 精读ROSA
 
-$$e =mc^2$$
-
----
-$$\frac{x+1}{\sqrt{1-x2sdf}}$$
-
 本人首次阅读CV方向论文，部分转有名词翻译存误，见谅
 
 # Abstract
@@ -54,12 +49,10 @@ $$\frac{x+1}{\sqrt{1-x2sdf}}$$
 
 ## 对抗样本生成
 
-{% asset_img E3.png [E3] %}
-{% asset_img E4.png [E4] %}
+$$x^*_0 = x,x^*_{t+1}=x^*_t+p_t$$
+$$p'_t=\sum_{i\in S_t}[\nabla_{x^*_t}f_{i,1-y_i}(x^*_t;\theta)-\nabla_{x^*_t}f_{y_i}(x^*_t;\theta)]$$
 {% asset_img algorithm1.png algorithm1 %}
-<!-- ![](read-after-ROSA/E3.png)
-![](read-after-ROSA/E4.png)
-![](read-after-ROSA/algorithm1.png) -->
+<!-- ![](read-after-ROSA/algorithm1.png)  -->
 
 > 此处latex暂时无法渲染，故只能截图。碍于无法使用latex，算法变量不作详细介绍，只作算法部分说明，若需理解请阅读原文
 - 原图每次迭代添加上`lost Function`对当前迭代的梯度使其向`lost function`上升的方向
@@ -88,13 +81,17 @@ CNN对对抗噪声以外的噪声不敏感且容易适应，故可反其道行�
 ## 情境感知复原组件
 由于对抗干扰所针对的就是卷积窗口的参数，为避开这个问题，恢复组件根据原图像素间的低级相似性来对特征图进行修复、优化，完全基于图的建模，不依赖于CNN架构。由于恢复组件利用全局上下文来细化结果，因此通过一些有限扰动强度的对抗性噪声来改变预测更加困难。
 原理则是最下化以下的能量函数
-{% asset_img E5.png [E5] %}
-<!-- ![](image/E5.png) -->
+
+$$E(y^*)=\sum_{i}E_u(y^*_i,y_i)+\sum_{i<j}E_p(y^*_i,y^*_j)$$
 
 y*指结果的特征图，而y指原标记的特征图，能量函数本质就是测量粗略计算图与目标图的区别cost，以及图内像素间的cost，越接近的像素理应值越接近则能量函数越小
 
-{% asset_img E6.png [E6] %}
-<!-- ![](image/E6.png) -->
+
+$$\begin{align}
+E_p(y^*_i,y^*_j)=\mu(y^*_i,y^*_j)\left\{ \omega_1\exp\left(-\frac{\left|p_i-p_j\right|^2}{2\theta_\alpha^2}-\frac{\left|x_i'-x_j'\right|^2}{2\theta_\beta^2}\right) \\
+ +\omega_2\exp\left(-\frac{\left|p_i-p_j\right|^2}{2\theta_\gamma^2}\right) \right\} \\
+\end{align}$$
+
 其中ω、μ均是由训练学习而来，μ是标签兼容性函数(`label compatibility function`)，用于对参数的标签不一致时的惩罚
 
 ## 训练
