@@ -1,3 +1,7 @@
+!node_modules/kramed/lib/rules/inline.js
+
+!node_modules/hexo-renderer-kramed/lib/renderer.js
+
 .DS_Store
 Thumbs.db
 db.json
@@ -5,7 +9,4 @@ db.json
 node_modules/
 public/
 .deploy*/
-
-!node_modules/kramed/lib/rules/inline.js
-
-!node_modules/hexo-renderer-kramed/lib/renderer.js
+.vscode/
