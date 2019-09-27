@@ -55,20 +55,20 @@
   };
 </script>
 
-  <meta name="description" content="精读ROSA本人首次阅读CV方向论文，部分转有名词翻译存误，见谅Abstract 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。 提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic noise)后的">
+  <meta name="description" content="本人首次阅读CV方向论文，部分转有名词翻译存误，见谅Abstract 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。 提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic noise)后的图片，学习预">
 <meta name="keywords" content="deep_learning,computer_vision,adversarial_attack,salient_object_detection">
 <meta property="og:type" content="article">
-<meta property="og:title" content="read after ROSA">
+<meta property="og:title" content="精读ROSA">
 <meta property="og:url" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/index.html">
 <meta property="og:site_name" content="Blog4Cung">
-<meta property="og:description" content="精读ROSA本人首次阅读CV方向论文，部分转有名词翻译存误，见谅Abstract 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。 提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic noise)后的">
+<meta property="og:description" content="本人首次阅读CV方向论文，部分转有名词翻译存误，见谅Abstract 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。 提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic noise)后的图片，学习预">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/algorithm1.png">
 <meta property="og:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/flow.png">
-<meta property="og:updated_time" content="2019-09-23T14:51:35.084Z">
+<meta property="og:updated_time" content="2019-09-25T16:08:16.743Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="read after ROSA">
-<meta name="twitter:description" content="精读ROSA本人首次阅读CV方向论文，部分转有名词翻译存误，见谅Abstract 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。 提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic noise)后的">
+<meta name="twitter:title" content="精读ROSA">
+<meta name="twitter:description" content="本人首次阅读CV方向论文，部分转有名词翻译存误，见谅Abstract 在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。 提出ROSA(端对端可训练)提高基于FCN(Fully convolution network)的显著物体预测的鲁棒性  引入通用噪声破坏对抗扰乱 对输入图片加了噪声(generic noise)后的图片，学习预">
 <meta name="twitter:image" content="http://vincentcung.github.io/2019/07/17/read-after-ROSA/algorithm1.png">
   <link rel="canonical" href="http://vincentcung.github.io/2019/07/17/read-after-ROSA/">
 
@@ -84,7 +84,7 @@
   };
 </script>
 
-  <title>read after ROSA | Blog4Cung</title>
+  <title>精读ROSA | Blog4Cung</title>
   
 
 
@@ -233,7 +233,7 @@
       <meta itemprop="name" content="Blog4Cung">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">read after ROSA
+        <h1 class="post-title" itemprop="name headline">精读ROSA
 
           
         </h1>
@@ -260,7 +260,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-23 14:51:35" itemprop="dateModified" datetime="2019-09-23T14:51:35Z">2019-09-23</time>
+                <time title="修改时间：2019-09-25 16:08:16" itemprop="dateModified" datetime="2019-09-25T16:08:16Z">2019-09-25</time>
               </span>
             
           
@@ -289,7 +289,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="精读ROSA"><a href="#精读ROSA" class="headerlink" title="精读ROSA"></a>精读ROSA</h1><p>本人首次阅读CV方向论文，部分转有名词翻译存误，见谅</p><h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><blockquote>
+        <p>本人首次阅读CV方向论文，部分转有名词翻译存误，见谅</p><h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><blockquote>
 <p>在显著物体检测研究有了一定进展的背景下，当前最优秀的预测框架虽有高准确率高效的特点，但依然存在被对抗攻击扰乱的问题。</p>
 <p>提出ROSA(端对端可训练)提高基于FCN(<code>Fully convolution network</code>)的显著物体预测的鲁棒性</p>
 <ol>
@@ -408,6 +408,10 @@ E_p(y^*_i,y^*_j)=\mu(y^*_i,y^*_j)\left\{ \omega_1\exp\left(-\frac{\left|p_i-p_j\
 
             <div class="post-nav-prev post-nav-item">
               
+                <a href="/2019/09/25/read-after-GNN-reviews/" rel="prev" title="初读GNN综述，GNN入门">
+                  初读GNN综述，GNN入门 <i class="fa fa-chevron-right"></i>
+                </a>
+              
             </div>
           </div>
         
@@ -455,7 +459,7 @@ E_p(y^*_i,y^*_j)=\mu(y^*_i,y^*_j)\left\{ \omega_1\exp\left(-\frac{\left|p_i-p_j\
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#精读ROSA"><span class="nav-number">1.</span> <span class="nav-text">精读ROSA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">2.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Introdutction"><span class="nav-number">3.</span> <span class="nav-text">Introdutction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于FCN的方法会引出以下问题："><span class="nav-number">3.1.</span> <span class="nav-text">基于FCN的方法会引出以下问题：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#segment-wise级别的标记方法则有较强的鲁棒性。"><span class="nav-number">3.2.</span> <span class="nav-text">segment-wise级别的标记方法则有较强的鲁棒性。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为提高密集标记模型的鲁棒性而提出ROSA"><span class="nav-number">3.3.</span> <span class="nav-text">为提高密集标记模型的鲁棒性而提出ROSA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#综上：ROSA对图像加入generic-noise来破坏对抗噪声，对此适应性地预测出特征图以对抗引入的噪声"><span class="nav-number">3.4.</span> <span class="nav-text">综上：ROSA对图像加入generic noise来破坏对抗噪声，对此适应性地预测出特征图以对抗引入的噪声</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Method-实现"><span class="nav-number">4.</span> <span class="nav-text">Method 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对抗样本生成"><span class="nav-number">4.1.</span> <span class="nav-text">对抗样本生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROSA实现"><span class="nav-number">4.2.</span> <span class="nav-text">ROSA实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分段屏蔽组件"><span class="nav-number">4.3.</span> <span class="nav-text">分段屏蔽组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#情境感知复原组件"><span class="nav-number">4.4.</span> <span class="nav-text">情境感知复原组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练"><span class="nav-number">4.5.</span> <span class="nav-text">训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">5.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">6.</span> <span class="nav-text">References</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Introdutction"><span class="nav-number">2.</span> <span class="nav-text">Introdutction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于FCN的方法会引出以下问题："><span class="nav-number">2.1.</span> <span class="nav-text">基于FCN的方法会引出以下问题：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#segment-wise级别的标记方法则有较强的鲁棒性。"><span class="nav-number">2.2.</span> <span class="nav-text">segment-wise级别的标记方法则有较强的鲁棒性。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为提高密集标记模型的鲁棒性而提出ROSA"><span class="nav-number">2.3.</span> <span class="nav-text">为提高密集标记模型的鲁棒性而提出ROSA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#综上：ROSA对图像加入generic-noise来破坏对抗噪声，对此适应性地预测出特征图以对抗引入的噪声"><span class="nav-number">2.4.</span> <span class="nav-text">综上：ROSA对图像加入generic noise来破坏对抗噪声，对此适应性地预测出特征图以对抗引入的噪声</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Method-实现"><span class="nav-number">3.</span> <span class="nav-text">Method 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对抗样本生成"><span class="nav-number">3.1.</span> <span class="nav-text">对抗样本生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROSA实现"><span class="nav-number">3.2.</span> <span class="nav-text">ROSA实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分段屏蔽组件"><span class="nav-number">3.3.</span> <span class="nav-text">分段屏蔽组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#情境感知复原组件"><span class="nav-number">3.4.</span> <span class="nav-text">情境感知复原组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练"><span class="nav-number">3.5.</span> <span class="nav-text">训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">4.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">5.</span> <span class="nav-text">References</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -470,7 +474,7 @@ E_p(y^*_i,y^*_j)=\mu(y^*_i,y^*_j)\left\{ \omega_1\exp\left(-\frac{\left|p_i-p_j\
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -526,6 +530,17 @@ E_p(y^*_i,y^*_j)=\mu(y^*_i,y^*_j)\left\{ \omega_1\exp\left(-\frac{\left|p_i-p_j\
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
 
         
 
