@@ -1,12 +1,10 @@
 ---
-title: read after ROSA
+title: 精读ROSA
 date: 2019-07-17 00:49:11
 tags: [deep_learning,computer_vision,adversarial_attack,salient_object_detection]
-categories: AI
+categories: CV
 mathjax: true
 ---
-
-# 精读ROSA
 
 本人首次阅读CV方向论文，部分转有名词翻译存误，见谅
 

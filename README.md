@@ -7,6 +7,16 @@
 1. 配置`hexo`渲染器
 2. 配置`NexT`内部数学公式渲染引擎
 
+## 配置`hexo`渲染器
+
+进入hexo根目录
+```
+npm un hexo-renderer-marked --save
+npm un hexo-renderer-marked-it-plus --save 关键！！
+npm un hexo-renderer-marked-it --save # 关键！！！
+npm i  hexo-renderer-kramed --save
+```
+
 ## 配置NexT内部数学公式渲染引擎
 
 进入`themes/next/_config.yml`，找到`math`配置
@@ -43,18 +53,8 @@ math:
     mathjax: true
     ---
 
-## 配置`hexo`渲染器
-
-进入hexo根目录
-```
-npm un hexo-renderer-marked --save
-npm un hexo-renderer-marked-it-plus --save 关键！！
-npm un hexo-renderer-marked-it --save # 关键！！！
-npm i  hexo-renderer-kramed --save
-```
-
 ## 附加问题
-####一行只能渲染一个行内公式，多个公式一起就不成功了
+#### 一行只能渲染一个行内公式，多个公式一起就不成功了
 
 #### `_`等符号解释为markdown符号
 
