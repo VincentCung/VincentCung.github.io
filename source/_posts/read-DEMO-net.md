@@ -160,6 +160,8 @@ $$\begin{aligned}
 >  - seed-oriented:如Fig3(a),如果根节点不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\})\not= f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$
 >  - degree-aware:如Fig3(b),如果根节点度不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\})\not= f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$
 >  - order-free 如Fig3(c),如果子节点的顺序不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\}) = f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$
+
+
 {% asset_img Fig3.png Fig3 %}
 <!-- ![](read-DEMO-net/Fig3.png)  -->
 ## 点特征学习
