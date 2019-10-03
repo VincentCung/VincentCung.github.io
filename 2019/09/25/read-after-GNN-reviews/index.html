@@ -56,7 +56,7 @@
 </script>
 
   <meta name="description" content="原文链接见此处 Abstract 许多学习任务需要处理图形数据，该图形数据包含元素之间的丰富关系信息。 建模物理系统，学习分子指纹，预测蛋白质界面以及对疾病进行分类都需要一个模型来从图形输入中学习。  在诸如从文本和图像之类的非结构数据中学习的其他领域中，对提取的结构的推理，例如句子的依存关系树和图像的场景图，是一个重要的研究课题，它也需要图推理模型。 GNN(Graph Neural Netw">
-<meta name="keywords" content="deep_learning">
+<meta name="keywords" content="deep_learning,graph_neural_network">
 <meta property="og:type" content="article">
 <meta property="og:title" content="初读GNN综述，GNN入门">
 <meta property="og:url" content="http://vincentcung.github.io/2019/09/25/read-after-GNN-reviews/index.html">
@@ -66,7 +66,7 @@
 <meta property="og:image" content="http://vincentcung.github.io/2019/09/25/read-after-GNN-reviews/T1.png">
 <meta property="og:image" content="http://vincentcung.github.io/2019/09/25/read-after-GNN-reviews/Fig2.png">
 <meta property="og:image" content="http://vincentcung.github.io/2019/09/25/read-after-GNN-reviews/Fig2.png">
-<meta property="og:updated_time" content="2019-09-27T18:09:30.169Z">
+<meta property="og:updated_time" content="2019-09-29T03:47:36.781Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初读GNN综述，GNN入门">
 <meta name="twitter:description" content="原文链接见此处 Abstract 许多学习任务需要处理图形数据，该图形数据包含元素之间的丰富关系信息。 建模物理系统，学习分子指纹，预测蛋白质界面以及对疾病进行分类都需要一个模型来从图形输入中学习。  在诸如从文本和图像之类的非结构数据中学习的其他领域中，对提取的结构的推理，例如句子的依存关系树和图像的场景图，是一个重要的研究课题，它也需要图推理模型。 GNN(Graph Neural Netw">
@@ -261,7 +261,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-27 18:09:30" itemprop="dateModified" datetime="2019-09-27T18:09:30Z">2019-09-27</time>
+                <time title="修改时间：2019-09-29 03:47:36" itemprop="dateModified" datetime="2019-09-29T03:47:36Z">2019-09-29</time>
               </span>
             
           
@@ -271,7 +271,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/GNN/" itemprop="url" rel="index"><span itemprop="name">GNN</span></a></span>
 
                 
                 
@@ -321,7 +321,7 @@
 <h2 id="为何图网络值得被研究？"><a href="#为何图网络值得被研究？" class="headerlink" title="为何图网络值得被研究？"></a>为何图网络值得被研究？</h2><ul>
 <li>基础网络如CNN、RNN不能很好地处理图输入，因为他们按照特定地顺序叠加节点的特征，然而，图中没有节点的自然顺序。为了完整表示一个图，如果我们像CNN、RNN一样遍历所有可能的顺序作为模型输入，这在计算时是非常冗余的。为了解决这个问题，GNN分别在每个节点上传播，忽略节点的输入顺序。<strong>GNN的输出对于节点的输入顺序是不变的</strong></li>
 <li>图中的边表示两个点之间的依赖信息，而在标准神经网络中，依赖信息只是节点的特征，但是GNN可以在图形结构的指引下传播，而不是将其用作特征一部分。一般而言，GNN用他邻近点状态加权求和来更新节点的隐态。</li>
-<li>人脑的推理过程几乎是基于从日常中提取的图形。标准的nn已经显示出通过学习数据分布合成图形和文档的能力，而他们仍<strong>不能从大型实验数据中学习推理图</strong>。然而，GNNs探索从场景图片和故事文档等非结构化数据中生成图形，这对于进一步的高级人工智能是一个强大的神经模型。最近，已经证明了一个未经训练的简单架构的GNN也可以很好地执行。</li>
+<li>人脑的推理过程几乎是基于从日常中提取的图形。标准的nn已经显示出通过学习数据分布合成图形和文档的能力，而他们仍<strong>不能从大型实验数据中学习推理图，因此需要更高的可解释性</strong>。然而，GNNs探索从场景图片和故事文档等非结构化数据中生成Graph，这对于进一步的高级人工智能是一个强大的神经模型。最近，已经证明了一个未经训练的简单架构的GNN也可以很好地执行。</li>
 </ul>
 <h2 id="本文所做出的主要贡献"><a href="#本文所做出的主要贡献" class="headerlink" title="本文所做出的主要贡献"></a>本文所做出的主要贡献</h2><ul>
 <li>详细回顾了现存的gnn模型，介绍了原始模型、变体和几个通用框架。提供一个统一的表示方法来表征不同模型中的传播方式，通过识别对应的聚合器、更新器可以很容易地用该表征方式来区分不同的模型</li>
@@ -375,7 +375,7 @@ loss = \sum_{i=1}^{p}(\mathbf{t}_i-\mathbf{o}_i)
 <li>用上一次迭代计算的$\mathbf{W}^{t-1}$的梯度来更新$\mathbf{W}^t$</li>
 </ol>
 <h3 id="原始模型-框架的限制"><a href="#原始模型-框架的限制" class="headerlink" title="原始模型/框架的限制"></a>原始模型/框架的限制</h3><ul>
-<li>对不动点的迭代更新节点的$\mathbf{h}$是低效的，如果放松不动点的假设，我们可以设计一个多层GNN来获得节点及其邻近点的稳定表示。</li>
+<li>对不动点的迭代中更新节点的$\mathbf{h}$是低效的，如果放松不动点的假设，我们可以设计一个多层GNN来获得节点及其邻近点的稳定表示。</li>
 <li>GNN在迭代过程中共享参数，而其他神经网络则在不同层使用不同参数以此来分层提取特征。而节点隐态的更新又是一个序列过程，可以参考GRU、LSTM等RNN的内核来进行。</li>
 <li>原始GNN无法有效的对边伤的信息特征建模，知识图中的边具有关系的类型，通过边的信息传播应该根据边的类型而有所不同。因此如何学习边上的隐态也是一个重要的点。</li>
 <li>如果我们把重点放在节点的表示上而不是图上，就不适合使用不动点，因为在不动点上表示的分布将会非常平滑，而且区分每个节点的信息量也会减少。 (<strong>?</strong>)</li>
@@ -460,7 +460,7 @@ loss = \sum_{i=1}^{p}(\mathbf{t}_i-\mathbf{o}_i)
 <p>一种基于高斯过程的贝叶斯方法(GGP)被提出来解决半监督学习问题。它显示了模型和光谱滤波方法之间的相似性，这可以从另一个角度给我们一些启示。</p>
 <p>然而，在上述所有的谱方法中，学习滤波器都依赖于拉普拉斯矩阵的特征基，而拉普拉斯本征矩阵又依赖于图的结构，也就是说，<strong>针对特定结构训练的模型不能直接应用于具有不同结构的图</strong>。</p>
 <ol>
-<li>non-spectral approaches<br>直接在图上定义卷积，在空间上的邻近点进行运算。主要困难是如何定义具有不同大小邻域的卷积运算，并保持神经网络的局部不变性。<ul>
+<li>non-spectral approaches<br>直接在图上定义卷积，在空间上的邻近点进行运算。主要困难是如何定义具有不同大小邻域(邻点集)的卷积运算，并保持神经网络的局部不变性。<ul>
 <li><code>Neural FPs</code> 对不同度的节点运用不同的权重矩阵，见(15)，该模型不能用语有更高节点度的大规模图。</li>
 <li><code>DCNN(diffusion-convolutional neural networks)</code> 转移矩阵用于定义DCNN中节点的邻域对于类分类有如下(16),对于图分类可以简化为(17)，DCNN也可以用于边分类任务，但需要将边转化为点并增大邻接矩阵。</li>
 <li><code>DGCN(dual graph convolutional neural networks)</code>共同考虑图的局部一致性和全局一致性。使用两个CNN来分布捕获两种一致性，并采用无监督损失函数来对他们集成。第一个网络参考等式(14)，第二个则用正点态互信息矩阵(<code>PPMI positive pointwise mutual information matrix</code>)来代替(14)的邻接矩阵，见(18)</li>
@@ -673,6 +673,8 @@ f(\mathbf{h}_i,\mathbf{h}_j) = \mathrm{ReLU}(\mathbf{w}_f^T[\theta(\mathbf{h}_i)
 </li>
 </ul>
 <hr>
+<h1 id="References——辅助阅读"><a href="#References——辅助阅读" class="headerlink" title="References——辅助阅读"></a>References——辅助阅读</h1><p><a href="https://www.cnblogs.com/lart/p/10463706.html#%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%86%E7%B1%BB" target="_blank" rel="noopener">【GNN】图神经网络小结</a><br><a href="https://www.jiqizhixin.com/articles/2018-12-28-21?from=synced&amp;keyword=%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C" target="_blank" rel="noopener">图神经网络综述：模型与应用</a><br><a href="http://p-chao.com/2019-01-20/图神经网络gnn/" target="_blank" rel="noopener">图神经网络GNN的简单理解</a><br><a href="https://www.jiqizhixin.com/articles/2019-01-07-8" target="_blank" rel="noopener">图神经网络概述第三弹：来自IEEE Fellow的GNN综述</a></p>
+<hr>
 <p><sup><a href="#fn_1" id="reffn_1">1</a></sup>:F. Scarselli, M. Gori, A. C. Tsoi, M. Hagenbuchner, and G. Monfar- dini, “The graph neural network model,” IEEE TNN 2009, vol. 20, no. 1, pp. 61–80, 2009.<br><sup><a href="#fn_2" id="reffn_2">2</a></sup>:M. A. Khamsi and W. A. Kirk, An introduction to metric spaces and fixed point theory. John Wiley &amp; Sons, 2011, vol. 53.<br><sup><a href="#fn_3" id="reffn_3">3</a></sup>:M. Kampffmeyer, Y. Chen, X. Liang, H. Wang, Y. Zhang, and E. P. Xing, “Rethinking knowledge graph propagation for zero-shot learning,” arXiv preprint arXiv:1805.11724, 2018.<br><sup><a href="#fn_4" id="reffn_4">4</a></sup>:D. Beck, G. Haffari, and T. Cohn, “Graph-to-sequence learning using gated graph neural networks,” in ACL 2018, 2018, pp. 273– 283.<br><sup><a href="#fn_5" id="reffn_5">5</a></sup>:T. N. Kipf and M. Welling, “Semi-supervised classification with graph convolutional networks,” ICLR 2017, 2017.<br><sup><a href="#fn_6" id="reffn_6">6</a></sup>:N. Peng, H. Poon, C. Quirk, K. Toutanova, and W.-t. Yih, “Cross-sentence n-ary relation extraction with graph lstms,” arXiv preprint arXiv:1708.03743, 2017.<br><sup><a href="#fn_7" id="reffn_7">7</a></sup>:K. Xu, C. Li, Y. Tian, T. Sonobe, K. Kawarabayashi, and S. Jegelka, “Representation learning on graphs with jumping knowledge networks,” ICML 2018, pp. 5449–5458, 2018.<br><sup><a href="#fn_8" id="reffn_8">8</a></sup>:W. Huang, T. Zhang, Y. Rong, and J. Huang, “Adaptive sampling towards fast graph representation learning,” in Proceedings of NeurIPS, 2018, pp. 4563–4572.<br><sup><a href="#fn_9" id="reffn_9">9</a></sup>:H. Dai, Z. Kozareva, B. Dai, A. Smola, and L. Song, “Learning steady-states of iterative algorithms over graphs,” in International Conference on Machine Learning, 2018, pp. 1114–1122.<br><sup><a href="#fn_10" id="reffn_10">10</a></sup>:P. W. Battaglia, J. B. Hamrick, V. Bapst, A. Sanchez-Gonzalez, V. Zambaldi, M. Malinowski, A. Tacchetti, D. Raposo, A. Santoro, R. Faulkner et al., “Relational inductive biases, deep learning, and graph networks,” arXiv preprint arXiv:1806.01261, 2018.</p>
 
     </div>
@@ -691,6 +693,8 @@ f(\mathbf{h}_i,\mathbf{h}_j) = \mathrm{ReLU}(\mathbf{w}_f^T[\theta(\mathbf{h}_i)
             
               <a href="/tags/deep-learning/" rel="tag"># deep_learning</a>
             
+              <a href="/tags/graph-neural-network/" rel="tag"># graph_neural_network</a>
+            
           </div>
         
 
@@ -708,6 +712,10 @@ f(\mathbf{h}_i,\mathbf{h}_j) = \mathrm{ReLU}(\mathbf{w}_f^T[\theta(\mathbf{h}_i)
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/29/read-DEMO-net/" rel="prev" title="DEMO-net 阅读">
+                  DEMO-net 阅读 <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -756,7 +764,7 @@ f(\mathbf{h}_i,\mathbf{h}_j) = \mathrm{ReLU}(\mathbf{w}_f^T[\theta(\mathbf{h}_i)
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本文的组织结构"><span class="nav-number">2.</span> <span class="nav-text">本文的组织结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">3.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GNN出现的动机"><span class="nav-number">3.1.</span> <span class="nav-text">GNN出现的动机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GNN的初始动机基于CNN-Convolutional-Neural-Network"><span class="nav-number">3.1.1.</span> <span class="nav-text">GNN的初始动机基于CNN(Convolutional Neural Network)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#另外的动机来源于图嵌入"><span class="nav-number">3.1.2.</span> <span class="nav-text">另外的动机来源于图嵌入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为何图网络值得被研究？"><span class="nav-number">3.2.</span> <span class="nav-text">为何图网络值得被研究？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本文所做出的主要贡献"><span class="nav-number">3.3.</span> <span class="nav-text">本文所做出的主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Model"><span class="nav-number">4.</span> <span class="nav-text">Model</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-文中用到符号参考"><span class="nav-number">4.1.</span> <span class="nav-text">2.0 文中用到符号参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-原始Graph-Neural-Networks"><span class="nav-number">4.2.</span> <span class="nav-text">2.1 原始Graph Neural Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原始模型-框架的限制"><span class="nav-number">4.2.1.</span> <span class="nav-text">原始模型/框架的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-GNN的变体"><span class="nav-number">4.3.</span> <span class="nav-text">2.2 GNN的变体</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-0-分类图"><span class="nav-number">4.3.1.</span> <span class="nav-text">2.2.0 分类图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-根据输入图的类型分类"><span class="nav-number">4.3.2.</span> <span class="nav-text">2.2.1 根据输入图的类型分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-根据传播步骤分类"><span class="nav-number">4.3.3.</span> <span class="nav-text">2.2.2 根据传播步骤分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Convolution"><span class="nav-number">4.3.3.1.</span> <span class="nav-text">Convolution</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#GraphSAGE"><span class="nav-number">4.3.3.1.1.</span> <span class="nav-text">GraphSAGE</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gate"><span class="nav-number">4.3.3.2.</span> <span class="nav-text">Gate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Attention"><span class="nav-number">4.3.3.3.</span> <span class="nav-text">Attention</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#skip-Connection"><span class="nav-number">4.3.3.4.</span> <span class="nav-text">skip Connection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hierachical-Pooling-分层池化"><span class="nav-number">4.3.3.5.</span> <span class="nav-text">hierachical Pooling (分层池化)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-3-根据训练方法分类"><span class="nav-number">4.3.4.</span> <span class="nav-text">2.2.3 根据训练方法分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#采样-抽样"><span class="nav-number">4.3.4.1.</span> <span class="nav-text">采样/抽样</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接受域控制eceptive-Field-Control"><span class="nav-number">4.3.4.2.</span> <span class="nav-text">接受域控制eceptive Field Control.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#data-Augmentation"><span class="nav-number">4.3.4.3.</span> <span class="nav-text">data Augmentation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#无监督学习"><span class="nav-number">4.3.4.4.</span> <span class="nav-text">无监督学习</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-通用框架"><span class="nav-number">4.4.</span> <span class="nav-text">2.3 通用框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-Message-Passing-Neural-Networks"><span class="nav-number">4.4.1.</span> <span class="nav-text">2.3.1 Message Passing Neural Networks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2-Non-local-Neural-Networks"><span class="nav-number">4.4.2.</span> <span class="nav-text">2.3.2 Non-local Neural Networks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-3-Graph-Networks"><span class="nav-number">4.4.3.</span> <span class="nav-text">2.3.3 Graph Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#graph-definition"><span class="nav-number">4.4.3.1.</span> <span class="nav-text">graph definition</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GN-blocks"><span class="nav-number">4.4.3.2.</span> <span class="nav-text">GN blocks</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#计算步骤"><span class="nav-number">4.4.3.3.</span> <span class="nav-text">计算步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设计准则"><span class="nav-number">4.4.3.4.</span> <span class="nav-text">设计准则</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本文的组织结构"><span class="nav-number">2.</span> <span class="nav-text">本文的组织结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">3.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GNN出现的动机"><span class="nav-number">3.1.</span> <span class="nav-text">GNN出现的动机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GNN的初始动机基于CNN-Convolutional-Neural-Network"><span class="nav-number">3.1.1.</span> <span class="nav-text">GNN的初始动机基于CNN(Convolutional Neural Network)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#另外的动机来源于图嵌入"><span class="nav-number">3.1.2.</span> <span class="nav-text">另外的动机来源于图嵌入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为何图网络值得被研究？"><span class="nav-number">3.2.</span> <span class="nav-text">为何图网络值得被研究？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本文所做出的主要贡献"><span class="nav-number">3.3.</span> <span class="nav-text">本文所做出的主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Model"><span class="nav-number">4.</span> <span class="nav-text">Model</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-0-文中用到符号参考"><span class="nav-number">4.1.</span> <span class="nav-text">2.0 文中用到符号参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-原始Graph-Neural-Networks"><span class="nav-number">4.2.</span> <span class="nav-text">2.1 原始Graph Neural Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原始模型-框架的限制"><span class="nav-number">4.2.1.</span> <span class="nav-text">原始模型/框架的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-GNN的变体"><span class="nav-number">4.3.</span> <span class="nav-text">2.2 GNN的变体</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-0-分类图"><span class="nav-number">4.3.1.</span> <span class="nav-text">2.2.0 分类图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-根据输入图的类型分类"><span class="nav-number">4.3.2.</span> <span class="nav-text">2.2.1 根据输入图的类型分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-根据传播步骤分类"><span class="nav-number">4.3.3.</span> <span class="nav-text">2.2.2 根据传播步骤分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Convolution"><span class="nav-number">4.3.3.1.</span> <span class="nav-text">Convolution</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#GraphSAGE"><span class="nav-number">4.3.3.1.1.</span> <span class="nav-text">GraphSAGE</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gate"><span class="nav-number">4.3.3.2.</span> <span class="nav-text">Gate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Attention"><span class="nav-number">4.3.3.3.</span> <span class="nav-text">Attention</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#skip-Connection"><span class="nav-number">4.3.3.4.</span> <span class="nav-text">skip Connection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hierachical-Pooling-分层池化"><span class="nav-number">4.3.3.5.</span> <span class="nav-text">hierachical Pooling (分层池化)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-3-根据训练方法分类"><span class="nav-number">4.3.4.</span> <span class="nav-text">2.2.3 根据训练方法分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#采样-抽样"><span class="nav-number">4.3.4.1.</span> <span class="nav-text">采样/抽样</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接受域控制eceptive-Field-Control"><span class="nav-number">4.3.4.2.</span> <span class="nav-text">接受域控制eceptive Field Control.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#data-Augmentation"><span class="nav-number">4.3.4.3.</span> <span class="nav-text">data Augmentation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#无监督学习"><span class="nav-number">4.3.4.4.</span> <span class="nav-text">无监督学习</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-通用框架"><span class="nav-number">4.4.</span> <span class="nav-text">2.3 通用框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-Message-Passing-Neural-Networks"><span class="nav-number">4.4.1.</span> <span class="nav-text">2.3.1 Message Passing Neural Networks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2-Non-local-Neural-Networks"><span class="nav-number">4.4.2.</span> <span class="nav-text">2.3.2 Non-local Neural Networks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-3-Graph-Networks"><span class="nav-number">4.4.3.</span> <span class="nav-text">2.3.3 Graph Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#graph-definition"><span class="nav-number">4.4.3.1.</span> <span class="nav-text">graph definition</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GN-blocks"><span class="nav-number">4.4.3.2.</span> <span class="nav-text">GN blocks</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#计算步骤"><span class="nav-number">4.4.3.3.</span> <span class="nav-text">计算步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设计准则"><span class="nav-number">4.4.3.4.</span> <span class="nav-text">设计准则</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References——辅助阅读"><span class="nav-number">5.</span> <span class="nav-text">References——辅助阅读</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -771,7 +779,7 @@ f(\mathbf{h}_i,\mathbf{h}_j) = \mathrm{ReLU}(\mathbf{w}_f^T[\theta(\mathbf{h}_i)
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -784,7 +792,7 @@ f(\mathbf{h}_i,\mathbf{h}_j) = \mathrm{ReLU}(\mathbf{w}_f^T[\theta(\mathbf{h}_i)
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -797,7 +805,7 @@ f(\mathbf{h}_i,\mathbf{h}_j) = \mathrm{ReLU}(\mathbf{w}_f^T[\theta(\mathbf{h}_i)
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>

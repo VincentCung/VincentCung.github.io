@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="原文链接见此处 Abstract 图结构数据广泛应用在很多重要学科，受网格状数据深度学习的启发，gnn被提出去学习点级或图级的表征 现有GNN有以下三个限制  对于图卷积如(seed-oriented, degree-aware, order-free)等特性的分析有限。 区分结构感知(structure-aware)的节点邻域时，节点度特异(degree-specific)的图结构没有被显式表">
+<meta name="keywords" content="deep_learning,graph_neural_network">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DEMO-net 阅读">
+<meta property="og:url" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/index.html">
+<meta property="og:site_name" content="Blog4Cung">
+<meta property="og:description" content="原文链接见此处 Abstract 图结构数据广泛应用在很多重要学科，受网格状数据深度学习的启发，gnn被提出去学习点级或图级的表征 现有GNN有以下三个限制  对于图卷积如(seed-oriented, degree-aware, order-free)等特性的分析有限。 区分结构感知(structure-aware)的节点邻域时，节点度特异(degree-specific)的图结构没有被显式表">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Fig1.png">
+<meta property="og:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Table1.png">
+<meta property="og:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Fig2.png">
+<meta property="og:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Fig3.png">
+<meta property="og:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Fig4.png">
+<meta property="og:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Table2.png">
+<meta property="og:updated_time" content="2019-10-03T10:41:29.219Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DEMO-net 阅读">
+<meta name="twitter:description" content="原文链接见此处 Abstract 图结构数据广泛应用在很多重要学科，受网格状数据深度学习的启发，gnn被提出去学习点级或图级的表征 现有GNN有以下三个限制  对于图卷积如(seed-oriented, degree-aware, order-free)等特性的分析有限。 区分结构感知(structure-aware)的节点邻域时，节点度特异(degree-specific)的图结构没有被显式表">
+<meta name="twitter:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Fig1.png">
+  <link rel="canonical" href="http://vincentcung.github.io/2019/09/29/read-DEMO-net/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>DEMO-net 阅读 | Blog4Cung</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog4Cung</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://vincentcung.github.io/2019/09/29/read-DEMO-net/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="GimCung Ho">
+      <meta itemprop="description" content="stay hungry stay foolish">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog4Cung">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">DEMO-net 阅读
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-29 10:36:56" itemprop="dateCreated datePublished" datetime="2019-09-29T10:36:56Z">2019-09-29</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-03 10:41:29" itemprop="dateModified" datetime="2019-10-03T10:41:29Z">2019-10-03</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/GNN/" itemprop="url" rel="index"><span itemprop="name">GNN</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li>原文链接见<a href="https://dl.acm.org/citation.cfm?doid=3292500.3330950" target="_blank" rel="noopener">此处</a></li>
+</ul><h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><blockquote>
+<p>图结构数据广泛应用在很多重要学科，受网格状数据深度学习的启发，gnn被提出去学习点级或图级的表征</p>
+<p>现有GNN有以下三个限制</p>
+<ol>
+<li>对于图卷积如(<code>seed-oriented, degree-aware, order-free</code>)等特性的分析有限。</li>
+<li>区分结构感知(<code>structure-aware</code>)的节点邻域时，节点度特异(<code>degree-specific</code>)的图结构没有被显式表达在图卷积中(?)</li>
+<li>图级上的池化机制，其理论解释尚不清楚</li>
+</ol>
+</blockquote><a id="more"></a>
+
+<p>基于Weisfeiler-Lehman的图同构测试(递归识别1跳邻接结构) 提出通用degree-speific gnn——<code>DEMO-Net</code>。</p>
+<p>为了显式地捕获集成有点属性的拓扑结构，文章认为图卷积应该具有三个属性:(<code>seed-oriented, degree-aware, order-free</code>)。为此，提出了多任务图卷积，其中每个任务分别代表对具有不同特定度值节点的表征学习，从而保持了<code>degree-specific</code>的图结构。文章作者设计了两种多任务学习方法:度比权重法和图卷积的哈希函数法。</p>
+<p>此外，我们还提出了一种新的图级池化/读出方案，该方案位于<code>degree-specific</code>的希尔伯特核空间(？)中，这是可证明的。</p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>为了充分利用图结构数据中丰富的信息，从节点/边缘属性和图的拓扑结构两方面学习有效的节点或图表示是非常重要的。</p>
+<p>为此，近年来，由于网格结构数据(如图像、视频、语言等)的深度学习体系结构的成功，许多图神经网络模型被提出。这些方法背后的一种直觉是，<strong>拓扑结构和节点属性</strong>可以通过<strong>递归聚合和压缩来自本地邻域的连续特征向量</strong>来集成在<strong>端到端培训体系结构</strong>中</p>
+<p>gnn的一个关键部分是<strong>图卷积</strong>(或特征聚合函数)，它从节点的局部邻域中聚合信息并转换成向量。gnn用拉普拉斯平滑或注意力机制将节点属性与图结构信息集成，并学习如何在低维度特征空间表征节点，在此特征空间中邻近节点共享相似的表征(即数据接近)。此外，为了学习整个图的表征，研究者提出了<strong>图级的池化(汇聚)机制</strong>(<code>graph-level pooling schemes</code>)。它能将节点的表征压缩到一个全局的特征向量。gnn学习的节点或图表示在许多下游图挖掘任务中，如节点分类、图分类等，都有较好的效果。</p>
+<h2 id="现有GNN局限"><a href="#现有GNN局限" class="headerlink" title="现有GNN局限"></a>现有GNN局限</h2><ul>
+<li>学习节点时，对图卷积中那些可以指导网络设计的特性分析十分有限。</li>
+<li>为了保持节点的邻近性，图卷积应用了一种<strong>特殊形式的拉普拉斯平滑</strong>，它简单地混合了来自节点邻域的属性。这将导致学习表示的特定于度(degree-specific)的图结构信息的丢失。如下Fig1。此外用于提高模型效率的邻域子采样方法显著降低了度特异性图结构的识别度。<img src="/2019/09/29/read-DEMO-net/Fig1.png" title="Fig1">
+<!-- ![](read-DEMO-net/Fig1.png)  -->
+<blockquote>
+<p>节点4和节点5在结构上不同，但是由于使用现有方法的一阶节点邻近性，它们将映射到类似的表示形式</p>
+</blockquote>
+</li>
+<li>关于图级pooling方案的理论解释基本缺失。</li>
+</ul>
+<h2 id="DEMO-Net-核心思想"><a href="#DEMO-Net-核心思想" class="headerlink" title="DEMO-Net 核心思想"></a>DEMO-Net 核心思想</h2><p>DEMO-Net是一种通用的图神经网络模型，模型在学习节点和图表示的同时考虑了<strong>度相关的图结构</strong></p>
+<p>受Weisfeiler-Lehman图同构测试，图卷积需要有三个特性：<code>seed-oriented, degree-aware, order-free</code>，以便将不同邻域的图结构映射到不同的特征表示。</p>
+<blockquote>
+<p>如Fig1中，节点2、8有相似的子树结构(根节点及其1跳的邻点组成)。他们在特征空间应该接近。相反节点4、5的结构则不同，他们在图中所表征的角色不一样，因此映射到特征空间后，他们不应该互相靠近。</p>
+</blockquote>
+<p>DEMO-Net是一个degree-specific的图网络，<strong>对度相同的节点共享相同的卷积</strong>。这个GNN也可以看作是一个多任务特征学习，每个任务表示如何表征不同度值的节点。</p>
+<p>DEMO-Net还提供了一个图等级上的池化机制来学习图的表征。论文从理论上证明了模型所学习的图表征存在于一个由特定于度的weisfeler - lehman图核诱导的可复制核Hilbert空间(RKHS)(<code>a Reproducing Kernel Hilbert space (RKHS) induced by a degree-specific Weisfeiler-Lehman graph kernel</code>)</p>
+<h2 id="Graph-Isomorphism-Network-图同构网络"><a href="#Graph-Isomorphism-Network-图同构网络" class="headerlink" title="Graph Isomorphism Network 图同构网络"></a>Graph Isomorphism Network 图同构网络</h2><p><code>GIN</code>的工作与本文相似。使用与多层感知器相关联的sum-aggregator作为邻域-单射(neighborhood-injective)图卷积，以此将不同节点邻域映射到不同的特征表示上。</p>
+<p><code>GIN</code>依赖于多层感知器的通用逼近能力，度相关的图结构在卷积中是隐式表达的。</p>
+<h2 id="文章主要贡献"><a href="#文章主要贡献" class="headerlink" title="文章主要贡献"></a>文章主要贡献</h2><ul>
+<li>从Weisfeiler-Lehman图同构检验角度出发对GNN进行理论分析，从而根据<code>seed-oriented, degree-aware, order-free</code>设计图卷积。</li>
+<li>基于度相同的节点有相同的图卷积，提出通用GNN框架DEMO-Net。degree-specfic多任务图卷积被提出用于学习点特征，同时提出一个图级池化机制来学习图的表征。（可以证明出这个表征在一个degree-specific Hilbert 核空间）</li>
+<li>使用基准数据集进行实验，结果证明了模型的有效性及高效性。</li>
+</ul>
+<h1 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h1><h2 id="节点分类"><a href="#节点分类" class="headerlink" title="节点分类"></a>节点分类</h2><p>现有的大多数GNN都是通过<strong>递归地将局部邻域的连续特征向量以端到端的方式聚集来学习节点表示</strong>的。可看作<code>MPNN</code>(<code>message passing neural network</code>)的实现，GNN的特征聚集可以看作信息message在局部邻域的传递。不同于谱域上的方法，MPNN风格的网络侧重于通过在空间节点域上直接卷积来提取空间的拓扑信息。</p>
+<p>GCN通过邻域的聚合函数来定义卷积运算，基于同样的启发，很多GNN被提出，他们分别用注意机制、均值、max等来替换聚合函数。</p>
+<p>这些GNN架构多数启发于网格结构数据(欧氏数据，即矩阵)的深度学习，很少有理论分析可以解释架构的高性能，也很少分析可以被用来指导新方法的设计。到目前为止，已经有人提出一些工作来解释为什么GNN可行。<strong>GCN的卷积是图上的拉普拉斯平滑的一种特殊形式，它解释了许多卷积层带来的过平滑现象。</strong></p>
+<p>Lei<sup><a href="#fn_1" id="reffn_1">1</a></sup>等人指出由GNN生成的图级表征存在于一些常用图核的RKHS(<code>Reproducing Kernel Hilbert Space</code>)中。同时指出，在区分图结构的能力上，基于一维聚集的GNN最多只能与WL同构测试(<code>Weisfeiler-Lehman (WL) isomorphism test</code>)相当。</p>
+<p>与已有的图神经网络研究工作相比，本文设计了一种<strong>基于WL同构检验的图节点邻域结构的度特异性图卷积</strong>。这与现有的工作有很大不同，现有的工作侧重于在特征空间中保留节点的邻近性，从而导致局部图结构的丢失。</p>
+<h2 id="图分类"><a href="#图分类" class="headerlink" title="图分类"></a>图分类</h2><p>图级池/读出机制旨在从图级分类任务的节点表示中学习整个图的表示。均值/max/和函数由于其计算效率和有效性而被广泛使用。</p>
+<p>图级池化的一个挑战是<strong>保持节点顺序的不变性</strong>。</p>
+<p>最近，许多GNN模型被提出，它们将节点表示学习和图级池化结合在一个统一的框架。与图核方法利用特定知识或随机游走的特性直观提取图特征或定义图相似度不同，GNN通过端到端的训练体系结构，自动学习图的表示形式，将节点属性与其拓扑信息集成在一起。</p>
+<p>然而，很少有人在图表示学习中考虑度相关的图结构。本文提出的graph-specific的图级池化方法就是为了解决这个问题，<strong>根据度的值压缩学习到的节点表示</strong>。</p>
+<h1 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h1><h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><img src="/2019/09/29/read-DEMO-net/Table1.png" title="Table1">
+<!-- ![](read-DEMO-net/Table1.png)  -->
+<ul>
+<li>$X\in \mathbb{R}^{n\times D}$ 每行为 $x_v$ 对应每一点的属性</li>
+<li>$A\in \mathbb{R}^{n\times n}$ $A_{ij}$是点$i,j$的相似性<h2 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h2>本文主要研究对象为无向属性图/网络。</li>
+</ul>
+<h3 id="节点级表征学习"><a href="#节点级表征学习" class="headerlink" title="节点级表征学习"></a>节点级表征学习</h3><p>输入：</p>
+<ul>
+<li>属性图$G =(V,E)$</li>
+<li>邻接矩阵$A \in \mathbb{R}^{n \times n}$</li>
+<li>点属性矩阵 $X \in \mathbb{R}^{n \times D}$</li>
+<li>被标记了的训练用点集合 $\{x_v,y_v\}_{v \in \mathcal{I}_G}$</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>点在d维嵌入空间内的一个特征表示$e_v \in \mathbb{R}^d$，若点的局部邻域结构不同，则表征在嵌入空间能够很好地被区分。</li>
+</ul>
+<h3 id="图级表征学习"><a href="#图级表征学习" class="headerlink" title="图级表征学习"></a>图级表征学习</h3><p>输入：</p>
+<ul>
+<li>带属性的图集合$\mathcal{G}=\{G_i\}^t_{i=1}$</li>
+<li>$t = |\mathcal{G}|$ 即图集合的数量</li>
+<li>邻接矩阵$A_i \in \mathbb{R}^{n_i \times n_i}$</li>
+<li>点属性矩阵 $X_i \in \mathbb{R}^{n_i \times D}$</li>
+<li>被标记了的训练用图集合 $\{G_i,\hat{y}_i\}_{i \in \mathcal{I}_\mathcal{G}}$</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>图$G_i$在d维嵌入空间内的一个特征表示$g_i \in \mathbb{R}^d$，若图的拓扑结构不同，则表征在嵌入空间能够很好地被区分。</li>
+</ul>
+<h2 id="Graph-Neural-Network"><a href="#Graph-Neural-Network" class="headerlink" title="Graph Neural Network"></a>Graph Neural Network</h2><p>大部分GNN框架遵守1维WL图同构测试，从WL test的角度来看，这些GNN在特征聚合的迭代中主要分为以下步骤：</p>
+<ul>
+<li>特征初始化/标记初始化(<code>label initialization</code>)，根据原始属性向量$x$来初始化点特征</li>
+<li>邻域识别/<code>multiset-label determination</code>，决定节点把哪些邻点作为局部邻域，并从中收集信息</li>
+<li>邻点排序/<code>multiset-label sorting</code>，对选取的邻点进行排序</li>
+<li>特征聚合/标记压缩<code>label commpression</code> 通过压缩聚合得来的特征向量来更新点的特征(隐态)</li>
+<li>图级池化汇聚/<code>graph representation</code> 总结所有节点的节点向量来形成一个全局图表征</li>
+</ul>
+<p>文章还对比了几个GNN框架，他们的共享第一、二个步骤，而对于第四个步骤的特征聚合则采取了不同的做法</p>
+<ul>
+<li>GCN <code>Graph Convolutional Network</code><script type="math/tex; mode=display">h^k_v = \sigma(\begin{matrix}
+\sum_{u\in\{v\} \cup N(v)}\hat{a}_{vu}W^kh_u^{k-1}
+\end{matrix})</script>$\hat{A}=(\hat{a}_{vu})\in \mathbb{R}^{n\times n}$ 对应加入自循环的邻接矩阵的重新规格化后的形式。$W^k$对用第k层可训练的权重矩阵</li>
+<li>GAT <code>Graph Attention Network</code><script type="math/tex; mode=display">h^k_v = \sigma(\begin{matrix}
+\sum_{u\in\{v\} \cup N(v)}a_{vu}W^kh_u^{k-1}
+\end{matrix})</script>$a_{uv}$是自注意力的分数即“对于点v的特征聚合来说，点u特征的重要程度”可以看出GCN是GAT的一种特殊形式</li>
+<li>GraphSAGE<script type="math/tex; mode=display">\begin{aligned}
+h_{N(v)}^k = \mathrm{AGGREGATE}_k(\{h_u^{k-1}|u\in N(v))\}) \\
+h_v^k = \sigma(W^k · \mathrm{CONCAT}(h_v^{k-1},h_{N(v)}^k))
+\end{aligned}</script>其中$\mathrm{AGGREGATE}$可用平均/最大值/LSTM聚集器，LSTM将邻点视为有顺序的序列，对于无序邻点则用随机排序。</li>
+</ul>
+<p>对于以上GNN提出了几个问题：</p>
+<ul>
+<li>除了lstm聚合器，其他的聚合机制对任意的邻点顺序不敏感，即效果相仿</li>
+<li>对于第k层的输出特征可以看作一个子树的结构，如下图Fig2</li>
+<li>随着网络层数加深，点的特征将越来越接近且不可区分(过平滑)</li>
+<li>很少有理论去分析以上问题的原因来指导后续GNN的设计，即节点度以及邻点顺序(子树的结构)对点特征计算的影响，<img src="/2019/09/29/read-DEMO-net/Fig2.png" title="Fig2">
+<!-- ![](read-DEMO-net/Fig2.png)  -->
+</li>
+</ul>
+<p>针对现有GNN的理论缺陷以及Fig2的描述，设计了一个显式保留有度相关子树结构的图卷积。</p>
+<h1 id="DEMO-NET-定义"><a href="#DEMO-NET-定义" class="headerlink" title="DEMO-NET 定义"></a>DEMO-NET 定义</h1><h2 id="一些定义与引理"><a href="#一些定义与引理" class="headerlink" title="一些定义与引理"></a>一些定义与引理</h2><ul>
+<li>子树集合定义：$\mathcal{T}=\{(h_v,h_{N(v)})\}$</li>
+<li>结构相似子树(<code>Structurally Identical Subtree</code>)：$\mathcal{T}$集合下的两棵子树如果满足除了邻点顺序不一致，其他性质均相同则称他们结构相似</li>
+<li>特征聚合可以简单定义：$h_v^k=f(\{h_v^{k-1},h_u^{k-1}|u\in N(v)\})$</li>
+</ul>
+<blockquote>
+<p>引理 4.2: 如果映射函数$f:\mathcal{T} \rightarrow \mathbb{R}^d$是<strong>单射</strong>的，当且仅当WL图同构检验确定两个点(u、v)的子树不满足”结构相似”时，v和u的习得特征才会不同。</p>
+<p>引理 4.3: 如果映射函数$f:\mathcal{T} \rightarrow \mathbb{R}^d$是<strong>单射</strong>的，该函数同时也是聚集函数(图卷积)，则满足以下特性，参考Fig3</p>
+<ul>
+<li>seed-oriented:如Fig3(a),如果根节点不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\})\not= f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$</li>
+<li>degree-aware:如Fig3(b),如果根节点度不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\})\not= f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$</li>
+<li>order-free 如Fig3(c),如果子节点的顺序不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\}) = f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$<img src="/2019/09/29/read-DEMO-net/Fig3.png" title="Fig3">
+<!-- ![](read-DEMO-net/Fig3.png)  -->
+<h2 id="点特征学习"><a href="#点特征学习" class="headerlink" title="点特征学习"></a>点特征学习</h2>基于以上对图卷积特性对要求，则特征聚合可以如下表达<script type="math/tex; mode=display">\begin{equation}
+h_v^k = f_s(h_v^{k-1}) \circ f_{deg(v)}(\{h_u^{k-1}|u\in N(v)\})
+\end{equation}</script></li>
+</ul>
+</blockquote>
+<ul>
+<li>$f_s$，$f_{deg(v)}$是种子(子树根节点)相关和度相关的映射函数，如果他们是单射的则满足seed-orientd、degree-aware，如果是对称的($f(x_1,x_2)=f(x_2,x_1)$)则满足order-free，映射函数的存在性见<a href="https://dl.acm.org/citation.cfm?doid=3292500.3330950" target="_blank" rel="noopener">原文</a>附件处证明</li>
+<li>$\circ$ 表示向量拼接</li>
+</ul>
+<script type="math/tex; mode=display">\begin{equation}
+  f_s(h_v^{k-1}) = \sigma(W_0^kh_v^{k-1})
+\end{equation}</script><ul>
+<li>$W_0^k$在第k层卷积内由所有节点共享的可训练权重矩阵</li>
+<li>$\sigma(·)$是非线性激活函数</li>
+</ul>
+<script type="math/tex; mode=display">\begin{equation}
+   f_{deg(v)}(h_{N(v)}^{k-1}) = \sigma(\begin{matrix}\sum_{u\in N(v)}(W_g^k + W^k_{deg(v)}h_u^{k-1})\end{matrix}) 
+\end{equation}</script><ul>
+<li>$W_g^k$在第k层卷积内由所有节点共享的全局可训练权重矩阵</li>
+<li>$W_{deg(v)}^k$在第k层卷积内度相关对应的权重矩阵</li>
+</ul>
+<p>对于大规模图中度的取值范围很大，会对多任务的学习造成困难(<strong>不同的度对应不同的任务，度选择越多任务越多，学习越复杂，效率越低</strong>)，为此引入了哈希核(又名<code>feature hashing</code> 或<code>hash trick</code>)</p>
+<p>哈希函数及对应核函数如下</p>
+<script type="math/tex; mode=display">\begin{equation}
+   \phi_i^{\xi_1,\xi_2}(x) = \sum_{j:\xi_1(j)=i}\xi_2(j)x_j
+\end{equation}</script><script type="math/tex; mode=display">\begin{equation}K_{\phi}(x,x')=\langle x,x'\rangle_\phi=\langle\phi^{\xi_1,\xi_2}(x),\phi^{\xi_1,\xi_2}(x')\rangle\end{equation}</script><ul>
+<li>可以理解哈希是对一个特征$x$降维到维度$m$的过程</li>
+<li>$\phi_i$表示降维后的第i维的值，$\phi(x)$则是用$x$降维后的对应向量</li>
+<li>哈希函数$\xi_1:\mathcal{N}\rightarrow \{1,…,m\}$ $\xi_2:\mathcal{N}\rightarrow \{1,-1\}$</li>
+<li>可见核函数是无偏的(<code>unbiased</code>) 即核函数的数学期望满足$E_{\phi}[\langle x,x’\rangle_\phi]=\langle x,x’\rangle$，对于$W^k_{deg(v)}$的某一行向量$w^k_{deg(v)}$则可以推出$E_{\phi}[\langle w^k_{deg(v)},h^{k-1}_u \rangle_\phi]=\langle w^k_{deg(v)},h^{k-1}_u\rangle$</li>
+</ul>
+<p>$f_{deg(v)}$则可以如下表达</p>
+<script type="math/tex; mode=display">\begin{equation}
+   f_{deg(v)}(h_{N(v)}^{k-1}) = \sigma(\begin{matrix}\sum_{u\in N(v)}W^k(\phi_g(h_u^{k-1})+\phi_{deg}(h_u^{k-1}))\end{matrix}) 
+\end{equation}</script><ul>
+<li>$W^k = \phi_g(W^k_g) + \sum_{deg}\phi_{deg}(W^k_{deg})$ 可共享于所有节点，而$\phi_{deg}(·)$则根据节点度的不同而改变</li>
+</ul>
+<p>多任务学习中的所有任务有一部分是共享的，如Fig3(b)中<strong>子树结构不同，但是其部分叶子节点是相同的，应共享部分信息</strong>，所以在计算中同时采用$W^k_g$,$W^k_{deg}$能够同时学习共享部分以及不共享部分(度不同而不同的结构)的信息</p>
+<h2 id="图特征学习"><a href="#图特征学习" class="headerlink" title="图特征学习"></a>图特征学习</h2><p>GNN层数越深，则点的表征能获得其局部邻域越高阶的拓扑信息，基于这个思想，图的表征则由不同度的点的特征的和拼接而成，(看不懂可先忽略这里的断句)具体如下：</p>
+<p>对在不同层GNN的图集合表示为$\{G_0,G_1,…G_k\}$，$G_0$表示原始的图，$G_k$则是第k层聚集后的图</p>
+<script type="math/tex; mode=display">\begin{equation}
+  h_{G_k}=\mathrm{CONCAT}(\{\sum_{v\in V}h_v^k·\delta(deg(v),d)\}|d\in degree(G))
+\end{equation}</script><ul>
+<li>$\delta(a,b) = \begin{cases}<br>1,  &amp; \mbox{if a=b} \\<br>0, &amp; \mbox{if a}\not= \mbox{b}<br>\end{cases}$</li>
+</ul>
+<p>如之前讨论，$G_k$捕捉了k跳(k阶)邻域的拓扑信息，为了把所有子树(即不同度)的结构信息，我们将$\{G_0,G_1,…G_k\}$的特征拼接起来：</p>
+<script type="math/tex; mode=display">\begin{equation}
+  h_{G}=\mathrm{CONCAT}(h_{G_k}|k=0,1,..,K)
+\end{equation}</script><img src="/2019/09/29/read-DEMO-net/Fig4.png" title="Fig4">
+<!-- ![](read-DEMO-net/Fig4.png)  -->
+<p>对比现有图级池化机制及WL子树的核，文章有提出了<code>degree-specific WL kernel</code>：</p>
+<script type="math/tex; mode=display">\begin{aligned}
+  K_{DWL}(G_k,G_k')&=\langle \phi_{DWL}(G_k),\phi_{DWL}(G_k')\\
+  &=\sum_{v\in V}\sum_{v'\in V'}\delta(deg(v),deg(v'))·\langle h_v^k,h_{v'}^k \rangle
+\end{aligned}</script><ul>
+<li>$\phi_{DWL}(G_k)=[c(G_k,d_1)\circ…\circ c(G_k,d_{max(degree(G_k))})]$</li>
+<li>$c(G_k,d_i)=\sum_{v\in V}h_v^k·\delta(d_i,deg(v))$</li>
+<li>对于激活函数$\sigma(·)$同样有一个映射函数$\phi_{\sigma}(·)$满足$\sigma(\mathbf{w^Tx})=\langle\phi_{\sigma(\mathbf{x})},\psi(\mathbf{w})\rangle$,$\psi(\mathbf{w})$由$\mathbf{w}$所构建</li>
+</ul>
+<p>则结合上述可以得出定理4.5,证明可见原文附件处</p>
+<blockquote>
+<p>定理4.5：对于一个<code>degree-specific WL kernel</code>，等式(8)中图的表征$h_G$ 属于核$K_{\sigma,DWL}(·,·)$的再生核希尔特空间(<code>RKHS,Reproducing Kernel Hilbert Space</code>)中</p>
+</blockquote>
+<script type="math/tex; mode=display">\begin{equation}
+  K_{\sigma,DWL}(G_K,G'_K)=\langle \phi_{\sigma}(\phi_{DWL}(G_k)),\phi_{\sigma}(\phi_{DWL}(G'_k))\rangle
+\end{equation}</script><p>基于和/平均的图级池化机制所在空间对应核如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+  K_{MWL}(G_k,G'_k)=\sum_{v\in V}\sum_{v'\in V'}\langle h_v^k,h_{v'}^k \rangle
+\end{aligned}</script><p>WL子树核如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+  K_{WLsubtree}(G_k,G'_k)=\sum_{v\in V}\sum_{v'\in V'}\delta(h_v^k,h_{v'}^k)
+\end{aligned}</script><p>综上，可以看出：</p>
+<ul>
+<li>WL子树核在点属性是连续的时候不能用于测量图的相似性</li>
+<li>对比等式(9)(11),文章中的图级表征位于<strong>度相关(degree-specific)的核空间</strong><h2 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h2></li>
+</ul>
+<p>根据引理4.3，可知当聚合函数是单射对称的时候，可同时满足<code>seed-oriented, degree-aware, order-free</code>的特性。文章还对比了其他GNN的这些特性，见Table2。DEMO-Net同时满足所有特性，在节点、图表征学习中显式地保存有邻点结构的信息，且<strong>DEMO-Net的时间复杂度与图的节点数、边数线性相关</strong>，证明见原文。<br><img src="/2019/09/29/read-DEMO-net/Table2.png" title="Table2"><br><!-- ![](read-DEMO-net/Table2.png)  --></p>
+<h1 id="Experimental"><a href="#Experimental" class="headerlink" title="Experimental"></a>Experimental</h1><p>主要列出了4个问题，比设计了相应的实验验证，本文只针对讲述模型的思想，实验步骤、过程、详细结果见原文。</p>
+<ol>
+<li>提出的DMEO-Net在节点分类上是否比最新的GNN有效？</li>
+<li>对比结构感知的图嵌入算法，在识别图结构上，DEMO-Net的表现如何？</li>
+<li>在图级分类问题上，带有度相关(degree-specific)信息的DEMO-Net的表现如何？</li>
+<li>DEMO-Net中度相关的卷积在学习点表征上是否有效？<h1 id="辅助阅读"><a href="#辅助阅读" class="headerlink" title="辅助阅读"></a>辅助阅读</h1></li>
+</ol>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Feature_hashing" target="_blank" rel="noopener">维基百科-feature_hahing</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/29527729" target="_blank" rel="noopener">再生核希尔伯特空间RKHS</a></li>
+<li><a href="http://sakigami-yang.me/2017/08/13/about-kernel-02/" target="_blank" rel="noopener">核方法</a></li>
+<li><a href="https://www.slideshare.net/pratikshukla11/graph-kernelpdf" target="_blank" rel="noopener">WL同构测试</a></li>
+<li><a href="https://www.yidianzixun.com/m/article/0MbO9lLp" target="_blank" rel="noopener">WL同构测试的另一篇介绍</a></li>
+</ul>
+<hr>
+<p><sup><a href="#fn_1" id="reffn_1">1</a></sup>:Tao Lei, Wengong Jin, Regina Barzilay, and Tommi Jaakkola. 2017. Deriving neural architectures from sequence and graph kernels. In ICML.</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/deep-learning/" rel="tag"># deep_learning</a>
+            
+              <a href="/tags/graph-neural-network/" rel="tag"># graph_neural_network</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/25/read-after-GNN-reviews/" rel="next" title="初读GNN综述，GNN入门">
+                  <i class="fa fa-chevron-left"></i> 初读GNN综述，GNN入门
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#现有GNN局限"><span class="nav-number">2.2.</span> <span class="nav-text">现有GNN局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DEMO-Net-核心思想"><span class="nav-number">2.3.</span> <span class="nav-text">DEMO-Net 核心思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph-Isomorphism-Network-图同构网络"><span class="nav-number">2.4.</span> <span class="nav-text">Graph Isomorphism Network 图同构网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文章主要贡献"><span class="nav-number">2.5.</span> <span class="nav-text">文章主要贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Related-Work"><span class="nav-number">3.</span> <span class="nav-text">Related Work</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#节点分类"><span class="nav-number">3.1.</span> <span class="nav-text">节点分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图分类"><span class="nav-number">3.2.</span> <span class="nav-text">图分类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Preliminaries"><span class="nav-number">4.</span> <span class="nav-text">Preliminaries</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#符号"><span class="nav-number">4.1.</span> <span class="nav-text">符号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题定义"><span class="nav-number">4.2.</span> <span class="nav-text">问题定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#节点级表征学习"><span class="nav-number">4.2.1.</span> <span class="nav-text">节点级表征学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图级表征学习"><span class="nav-number">4.2.2.</span> <span class="nav-text">图级表征学习</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph-Neural-Network"><span class="nav-number">4.3.</span> <span class="nav-text">Graph Neural Network</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DEMO-NET-定义"><span class="nav-number">5.</span> <span class="nav-text">DEMO-NET 定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些定义与引理"><span class="nav-number">5.1.</span> <span class="nav-text">一些定义与引理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#点特征学习"><span class="nav-number">5.2.</span> <span class="nav-text">点特征学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图特征学习"><span class="nav-number">5.3.</span> <span class="nav-text">图特征学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Discussion"><span class="nav-number">5.4.</span> <span class="nav-text">Discussion</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Experimental"><span class="nav-number">6.</span> <span class="nav-text">Experimental</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#辅助阅读"><span class="nav-number">7.</span> <span class="nav-text">辅助阅读</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">GimCung Ho</p>
+  <div class="site-description" itemprop="description">stay hungry stay foolish</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">GimCung Ho</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+  
+
+  
+
+  
+
+</body>
+</html>
