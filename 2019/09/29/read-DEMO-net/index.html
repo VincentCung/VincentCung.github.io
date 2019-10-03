@@ -69,7 +69,7 @@
 <meta property="og:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Fig3.png">
 <meta property="og:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Fig4.png">
 <meta property="og:image" content="http://vincentcung.github.io/2019/09/29/read-DEMO-net/Table2.png">
-<meta property="og:updated_time" content="2019-10-03T10:41:29.219Z">
+<meta property="og:updated_time" content="2019-10-03T10:44:43.405Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DEMO-net 阅读">
 <meta name="twitter:description" content="原文链接见此处 Abstract 图结构数据广泛应用在很多重要学科，受网格状数据深度学习的启发，gnn被提出去学习点级或图级的表征 现有GNN有以下三个限制  对于图卷积如(seed-oriented, degree-aware, order-free)等特性的分析有限。 区分结构感知(structure-aware)的节点邻域时，节点度特异(degree-specific)的图结构没有被显式表">
@@ -264,7 +264,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-10-03 10:41:29" itemprop="dateModified" datetime="2019-10-03T10:41:29Z">2019-10-03</time>
+                <time title="修改时间：2019-10-03 10:44:43" itemprop="dateModified" datetime="2019-10-03T10:44:43Z">2019-10-03</time>
               </span>
             
           
@@ -415,14 +415,15 @@ h_v^k = \sigma(W^k · \mathrm{CONCAT}(h_v^{k-1},h_{N(v)}^k))
 <ul>
 <li>seed-oriented:如Fig3(a),如果根节点不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\})\not= f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$</li>
 <li>degree-aware:如Fig3(b),如果根节点度不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\})\not= f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$</li>
-<li>order-free 如Fig3(c),如果子节点的顺序不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\}) = f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$<img src="/2019/09/29/read-DEMO-net/Fig3.png" title="Fig3">
-<!-- ![](read-DEMO-net/Fig3.png)  -->
-<h2 id="点特征学习"><a href="#点特征学习" class="headerlink" title="点特征学习"></a>点特征学习</h2>基于以上对图卷积特性对要求，则特征聚合可以如下表达<script type="math/tex; mode=display">\begin{equation}
-h_v^k = f_s(h_v^{k-1}) \circ f_{deg(v)}(\{h_u^{k-1}|u\in N(v)\})
-\end{equation}</script></li>
+<li>order-free 如Fig3(c),如果子节点的顺序不一致则$f(\{h_i^{k-1},h_u^{k-1}|u\in N(i)\}) = f(\{h_j^{k-1},h_u^{k-1}|u\in N(j)\})$</li>
 </ul>
 </blockquote>
-<ul>
+<img src="/2019/09/29/read-DEMO-net/Fig3.png" title="Fig3">
+<!-- ![](read-DEMO-net/Fig3.png)  -->
+<h2 id="点特征学习"><a href="#点特征学习" class="headerlink" title="点特征学习"></a>点特征学习</h2><p>基于以上对图卷积特性对要求，则特征聚合可以如下表达</p>
+<script type="math/tex; mode=display">\begin{equation}
+  h_v^k = f_s(h_v^{k-1}) \circ f_{deg(v)}(\{h_u^{k-1}|u\in N(v)\})
+\end{equation}</script><ul>
 <li>$f_s$，$f_{deg(v)}$是种子(子树根节点)相关和度相关的映射函数，如果他们是单射的则满足seed-orientd、degree-aware，如果是对称的($f(x_1,x_2)=f(x_2,x_1)$)则满足order-free，映射函数的存在性见<a href="https://dl.acm.org/citation.cfm?doid=3292500.3330950" target="_blank" rel="noopener">原文</a>附件处证明</li>
 <li>$\circ$ 表示向量拼接</li>
 </ul>
