@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="原文DOISCI-HUB[TOC]Abstract跨膜蛋白(TMP transmembrane Protein)在很多生理过程中起着重要作用，如细胞识别以及细胞通讯中。他们的结构很难被获取但，同时对揭示细胞复杂的功能很关键。有很多计算算法因此被发明用来填补从主序列预测结构的空白。在这个课题中，我们主要聚集于α螺旋的跨膜区段和发明了一个多尺度的深度学习管道——MemBrain 3.0来提高对拓扑结构">
+<meta name="keywords" content="deep_learning,bioinformation,ResNet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="translation-MemBrain_3.0">
+<meta property="og:url" content="http://vincentcung.github.io/2020/02/21/translate-MemBrain/index.html">
+<meta property="og:site_name" content="Blog4Cung">
+<meta property="og:description" content="原文DOISCI-HUB[TOC]Abstract跨膜蛋白(TMP transmembrane Protein)在很多生理过程中起着重要作用，如细胞识别以及细胞通讯中。他们的结构很难被获取但，同时对揭示细胞复杂的功能很关键。有很多计算算法因此被发明用来填补从主序列预测结构的空白。在这个课题中，我们主要聚集于α螺旋的跨膜区段和发明了一个多尺度的深度学习管道——MemBrain 3.0来提高对拓扑结构">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://vincentcung.github.io/2020/02/21/translate-MemBrain/Fig1.png">
+<meta property="og:image" content="http://vincentcung.github.io/2020/02/21/translate-MemBrain/translate-MemBrain/Fig1.png">
+<meta property="og:updated_time" content="2020-02-21T13:48:24.048Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="translation-MemBrain_3.0">
+<meta name="twitter:description" content="原文DOISCI-HUB[TOC]Abstract跨膜蛋白(TMP transmembrane Protein)在很多生理过程中起着重要作用，如细胞识别以及细胞通讯中。他们的结构很难被获取但，同时对揭示细胞复杂的功能很关键。有很多计算算法因此被发明用来填补从主序列预测结构的空白。在这个课题中，我们主要聚集于α螺旋的跨膜区段和发明了一个多尺度的深度学习管道——MemBrain 3.0来提高对拓扑结构">
+<meta name="twitter:image" content="http://vincentcung.github.io/2020/02/21/translate-MemBrain/Fig1.png">
+  <link rel="canonical" href="http://vincentcung.github.io/2020/02/21/translate-MemBrain/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>translation-MemBrain_3.0 | Blog4Cung</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog4Cung</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://vincentcung.github.io/2020/02/21/translate-MemBrain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="GimCung Ho">
+      <meta itemprop="description" content="stay hungry stay foolish">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog4Cung">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">translation-MemBrain_3.0
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-02-20 23:55:33" itemprop="dateCreated datePublished" datetime="2020-02-20T23:55:33Z">2020-02-20</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-21 13:48:24" itemprop="dateModified" datetime="2020-02-21T13:48:24Z">2020-02-21</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/bioinformation/" itemprop="url" rel="index"><span itemprop="name">bioinformation</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>原文<a href="https://doi.org/10.1016/j.jmb.2019.12.007" target="_blank" rel="noopener">DOI</a><br><a href="https://sci-hub.si/https://doi.org/10.1016/j.jmb.2019.12.007" target="_blank" rel="noopener">SCI-HUB</a></p><p>[TOC]</p><h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>跨膜蛋白(<code>TMP transmembrane Protein</code>)在很多生理过程中起着重要作用，如细胞识别以及细胞通讯中。他们的结构很难被获取但，同时对揭示细胞复杂的功能很关键。有很多计算算法因此被发明用来填补从主序列预测结构的空白。在这个课题中，我们主要聚集于α螺旋的跨膜区段和发明了一个多尺度的深度学习管道——MemBrain 3.0来提高对拓扑结构的预测。这个新方法包含有两个子模块。第一个模块是对跨膜螺旋(<code>TMH</code>)的预测，它具有通过结合对尾部建模来精准预测具有尾部结构跨膜蛋白的特点。预测核心策略包含有深度学习模型和一个动态阈值策略。深度模型由一个小尺度残基水平(<code>residue-based</code>)残差网络和一个大尺度完整序列水平(<code>entire-sequence-based</code>)残差网络所组成。动态阈值策略是为了二值化预测分数和解决欠分割(<code>under-split</code>)的问题而设计的。第二个模块是由支持向量机和极大极小策略(<code>MMA Max-Min Assignment</code>)组成的方向预测器。MemBrain 3.0的主要贡献是它的设计模式由动态阈值策略和MMA策略所组成，这两者让预测器对复杂跨膜蛋白(<code>hard-TMH</code>)如半跨膜螺旋(<code>half-TMH</code>)，连续跨膜螺旋(<code>back-to-bcak TMH</code>)和长跨膜螺旋(<code>long-TMH</code>)。系统的实验已经试验了这个新模型的有效性，且模型可以在<a href="www.csbio.sjtu.edu.cn/bioinf/MemBrain/">www.csbio.sjtu.edu.cn/bioinf/MemBrain/</a>使用。</p><a id="more"></a>
+
+
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h1><p>膜是将细胞内部和外界环境隔开来的一道屏障。它由磷脂双分子层和大量的内嵌膜蛋白所组成。先前的课题已经展示了在整个蛋白质组(<code>proteome</code>)中有30%的蛋白质是膜蛋白。他们在一系列的生理过程中起着重要作用，如细胞信号传导、离子电导交换(<code>ion conductivity</code>)、细胞凝聚(<code>cell cohesion</code>)、细胞识别、细胞间通讯。因此很多药物被设计来通过定位膜蛋白来影响生理过程。绝大多数的膜蛋白都是α螺旋跨膜蛋白。他们常见于真核生物的细胞膜上、细菌细胞的内膜，甚至是在细菌的外膜。然而通过实验判别他们的应该依然具有挑战性，因为它(指蛋白)很难被溶解、提纯、结晶化，而且他们对于核磁共振光谱法(<code>NMR nuclear magnetic resonance spectroscopy</code>)而言结构过于庞大了。在测序技术快速发展下，已知序列和已发现结构的数量有所提升。根据对已知3D结构数据库中膜蛋白的统计，跨膜蛋白的已知结构对于PDB(<code>protein Data Bank</code>)中的所有结构只占 1.8% 以下。因此，迫切需要有能从序列中准确预测出跨膜蛋白结构的自动计算技术。</p>
+<p>三维结构预测通常有数个关键步骤实现。跨膜蛋白拓扑预测正是这预测过程中的一个步骤，它起着重要的作用。如在FILM3中，预测出的TMP拓扑结构被用来生成初始的构造。RosettaMembrane中也在能量函数设计也把预测出的TMP拓扑结构纳入考虑。这样优化会导致一致的低能量构象。</p>
+<blockquote>
+<p>In this way,optimization leads to a consensus low-energy conformation.</p>
+</blockquote>
+<p>最近的课题都目睹了残基接触点协助的(<code>residue contact-assisted</code>)结构预测快速发展，TMP拓扑结构依然对这类预测提供着重要信息。举个例子，有文章报告了通过提供TMH簇的重要约束能够提高预测残基接触点结构的效果。TMP拓扑也显示出与残基接触点相关的优点。存在论文显示了预测残基接触点的准确性很大程度上取决于同源序列的数量，而对于TMP拓扑预测，只需要较少的同源序列。如HMM-TOP中最多只要50条同源序列就可以达到满意的表现。这个特性让拓扑预测能够为没有足够同源蛋白序列的膜蛋白推理出可靠的残基接触点这个困难的任务提供重要线索。</p>
+<p>TMP拓扑预测可以分为两个子任务：(1)TMH区段预测(2)跨膜方向的判断。过去的30年内，发展出了数十个TMH预测方法，他们能够分为三类：基于疏水性尺度的方法(<code>hydrophobicity scale-based</code>)、基于机器学习的方法和基于集成的方法。</p>
+<p>第一类中，疏水性尺度是重要的特征，因为埋在膜内和暴露在溶液中的残基具有不同的疏水性，滑窗可以用于捕捉邻近氨基酸的疏水性，对滑窗中的疏水性尺度作平均可看作中间残基的疏水性尺度，一个固定的阈值被用来区分中间的残基是否属于TMH区段。</p>
+<p>最近，基于机器学习的方法被广泛应用，对于数据驱动的统计模型被应用，如隐马可洛夫(HMM)、支持向量机、随机森林、k近邻。同时除了疏水性尺度，试验中的一些进化信息也十分有用。TMSEG就是这个分类中的一个模型。TMSEG中的随机森林用了一个19个连续残基的滑窗的数据作为输入。包含有许多进化信息的位置特异分数矩阵(PSSM)也被应用。我们最初的版本的Membrain模型也属于这个分类。该模型利用从多序列比对获得的特征，应用被理论证明过的KNN算法进行分类。尽管这些模型在这一类有着优秀的效果，他们的表现很大程度依赖于提取的特征、应用的机器学习算法、相关的参数。</p>
+<p>一致性方法(<code>consensus method</code>)构成了第三类模型，实际上它是基于集成学习的模型。如TOPCONS中，对确定的蛋白质序列，先用OCTOPUS、SCAMPI-single、PRODIV-TMHMM和PRO-TMHMM生成最初的拓扑轮廓(<code>topology profile</code>)，然后通过动态规划算法和Viterbi算法从中得出一致性的预测。这些结果展示了对拥有高度相似度的蛋白质使用这些预测方法，使用集成框架能有效提高效果。</p>
+<p>拓扑预测的第二个子任务是方向的判定，对于每一个预测的TMH判断出其向内还是向外的朝向。最初，著名的正内原则(<code>postive-inside rule</code>)被应用且对后续的工作具有很长远的影响。这个原则指出细胞内侧的loop具有更多带正电的残基如<code>Lys，arg</code>。这之后，随着越来越多的可用数据，机器学习的算法被应用，如随机森林和支持向量机。TMSEG中随机森林取TMH开端(末端)8个残基和TMH前(或后)的15个残基作为输入。正电残基所占的百分比也作为特征之一被使用。在MEMSAT—SVM中，SVM使用35个残基大小的滑窗进行预测，判断中间的残基属于内侧还是外侧的loop。</p>
+<p>尽管在这个领域已有很多预测器，但还有空间提高，这个课题的动机有以下三点：尾端建模、最近深度学习取得的进步，困难的TMH段：<br>(1)大部分现存的预测器都是用完全嵌入膜中的TMH来训练。这意味着粘连在膜外的尾端被视为负样本。有报告指出这些尾端对生理过程有重要作用。如化学受体CCR5上的TMH1，2，3和7的尾端形成的洞被作为了HIV-1实体进入$\mathrm{CD4}^+$细胞的位点。一些抑制剂被设计用来阻止这个过程，他们通过阻塞这个交互位点而实现阻止。整合素$\mathrm{\alpha IIb\beta3}$复合体(integrin $\mathrm{\alpha IIb\beta3}$ complex)中，从内向外的跨膜信号传导由TMH尾端-talin F3复合体实现。人类bestrophin-1一个细菌同族体的结构中，一段具有长尾端的TMH链接了一个分散的胞质区域和TMH簇，他们共同组成了离子通道。ExbB 中的TMH2，6，7在细胞质中形成了一个巨大的闭合洞(<code>large enclosed cavity</code>)并能量传导具有重要作用。在SNARE中膜泡运输依赖于由syntaxin 1A尾端形成的SNARE复合体和沿着SNARE motif上的synaptiobrevin2。考虑到他们的重要作用，我们扩展建模的范围以覆盖尾端。</p>
+<blockquote>
+<p>In the integrin αIIbβ3 complex, inside-out transmembrane signaling is achieved by the TMH tail-talin F3 complex [31]. In the structure of a bacterial homolog of human bestrophin-1, a TMH with a long tail connects a separate cytoplasmic domain and the TMH bundle, which together act as an ion channel [32]. The tail parts of TMH 2, 6, and 7 in ExbB form a large enclosed cavity in the cytoplasm and play an important role in energy transduction [33]. Vesicular transport relies on the SNARE complex formed by tails of syntaxin 1A and synaptobrevin 2, along with SNARE motifs in SNAP-25 [34]. Considering their important roles, we extend the modeling scope to cover the tails.</p>
+</blockquote>
+<p>(2)深度学习已被证明对于处理复杂的生物数据是有效的。这个课题中我们提出了多尺度的深度学习融合管道，其中小尺度网络聚焦于单独残基水平上的模型，大尺度网络聚焦于完整序列水平上的模型。我们接下来的实验结果会验证新方法的有效性。</p>
+<p>(3)TMP结构是十分复杂的，并且有很多不同特殊的情况。正如下图Figure1中所示，在TMH长度上，在已经发现的结构中能够经常观察到特别长或特别短的TMH；在loop长度上，两个TMH通过一个非常短的loop所连接也是一个常见的拓扑结构。所有这些非常规的结构使一个通用的规则变得行不通。受此问题启发，在MemBrain3.0中我们设计了一个动态阈值策略来预测TMH和用极大极小分数策略(<code>Max-Min score assignment</code>)策略来做方向判断，MMA对于提高效果十分有效，尤其对于上述讨论中有挑战的情况。</p>
+<img src="/2020/02/21/translate-MemBrain/Fig1.png" title="Fig1">
+<p><img src="translate-MemBrain/Fig1.png" alt=""></p>
+<blockquote>
+<p>Figure 1 α螺旋TMH拓扑的示意图。由蓝色的尾端部分和橙色的内嵌部分组成的圆桶代表TMH。左侧第二个TMH是一个long-TMH，它有超过30个的残基以及一个粘连在膜外侧的长尾端。第三个TMH是一个half-TMH，它只跨越半层膜，它前后的非TMH部分的内外侧位点是一致的(the inside/outside positions of the non-TMHs before and afrer it are the same)。第4第5个TMH是一个相连的TMH(<code>back-to-back TMH</code>)，他们由不超过3个残基组成的loop所链接。</p>
+</blockquote>
+<h1 id="2-Material-and-Methods"><a href="#2-Material-and-Methods" class="headerlink" title="2. Material and Methods"></a>2. Material and Methods</h1><p>如前面所述，这个工作中，TMH包含两个部分：内嵌部分和尾端部分。在接下来的小节中，内嵌部分的残基称为内嵌残基，尾端部分上的残基称为尾端残基。蛋白质序列上的其他部分即TMH以外的称为非TMH(<code>non-TMH</code>)。</p>
+<h2 id="2-1-Dataset"><a href="#2-1-Dataset" class="headerlink" title="2.1 Dataset"></a>2.1 Dataset</h2><p><strong>Training，validation，and test sets</strong><br>OPM(<code>Orientations of Protins in Membrane</code>)数据库是一个最新的实验性TMP结构数据库，它是这个工作数据主要来源。结构的标注、氨基酸序列信息、PDB码以及链ID都取自它。更具体而言，我们先从OPM收集两类蛋白，即α螺旋多跨膜蛋白(<code>polytopic-proteins</code>)以及双跨膜蛋白(<code>bitopic-proteins</code>)。它总共给了我们1783个PDB问卷(7814个蛋白链)。然后蛋白链根据以下情况进行进一步筛除：(i)不连续的链如，两个相邻残基的内外侧位点(<code>inside/outside positions</code>)不一致；(ii)长度少于20个残基的蛋白质链；(iii)链中没有TMH。<strong>最后有5781个蛋白质链剩下。我们选取用于TMSEG中的40个测试蛋白作为我们的独立测试集</strong>，他们共包含149个TMH，他们都是通过NMR或低于4.5埃的X射线技术得出的结果(<code>X-ray technique with resolutions less than 4.5</code>$\overset{\circ}{A}$)</p>
+<p>为了进行公平的对比，我们从两个方面减少了序列冗余度：(i)40个测试蛋白和余下的5741个蛋白间的冗余；(ii)5741个蛋白之间的冗余。我们用UniqueProt降低序列冗余度，参数设置HVAL&gt;0，TMSEG工具也是这样做的。在这个阈值下，没有一组蛋白质链的相似度大于20%，其中比对的残基数大于250个。具体而言，首先，在HVAL&gt;0下，5741个蛋白质相似于40个测试蛋白中任意一个的蛋白质被移除，然后，剩下的蛋白质在HVAL&gt;0下过滤冗余度/我们最后得到380个蛋白质。为了训练的目的，我们随机选择39个蛋白质作为验证集，剩下279个蛋白组成训练集。</p>
+<p>为了得到标签，我们必须知道二级结构，每个残基和膜的坐标。二级结构可以用DSSP进行计算，坐标信息可以从PDB文件中提取，标签可以根据上述的TMH定义进行生成。我们通过结合OPM的注释来处理弯折的螺旋，其中两个TMH和他们中间的弯折被融合称一段。</p>
+<h2 id="2-2-protein-sequence-features"><a href="#2-2-protein-sequence-features" class="headerlink" title="2.2 protein sequence features"></a>2.2 protein sequence features</h2><p>我们在MemBrian 3.0中用了4类特征，他们在先前的工作已经被验证过有效性。</p>
+<h3 id="Position-specific-scoring-matrix-PSSM"><a href="#Position-specific-scoring-matrix-PSSM" class="headerlink" title="Position-specific scoring matrix PSSM"></a>Position-specific scoring matrix PSSM</h3><p>这个特征是一种对生理序列常用的<code>motif</code>表征。它含有丰富的进化信息并且广泛在先前提到的TMH预测的方法。我们用PSI-BLAST来针对非冗余的数据库进行搜索，参数包含迭代次数3、e值为1e-6。然后PSSM会通过以下多序列比对而生成(<code>multiple sequence alignment MSA</code>)</p>
+<script type="math/tex; mode=display">\begin{equation} \mathrm{PSSM}_{i,j}=\log_2 \frac{PPM_{i,j}}{b_j} \end{equation}</script><p>$i$代表序列中第$i$个位置，$j$代表20种氨基酸的第$j$种，$\mathrm{PPM}$是位置概率矩阵的缩写，$\mathrm{PPM}_{i,j}$代表在MSA中第$i$列出现第$j$种氨基酸的概率；$b_j$氨基酸$j$的背景频率，一个蛋白质序列有$L$个氨基酸，所以PSSM的维度是$L\times 20$。</p>
+<h3 id="Hidden-Markov-Model-profile"><a href="#Hidden-Markov-Model-profile" class="headerlink" title="Hidden Markov Model profile"></a>Hidden Markov Model profile</h3><p>这个特征由HHblits生成，这是另一个基于HMM-HMM比对算法的同源序列搜索工具。HMM profile的维度是$L \times 30$。每一个残基都会由20维初始发射频率(<code>EF emssion frequencies</code>)、7维转变概率(<code>transition probabilities</code>)和3维局部差异性(<code>local diversities</code>)组成，EF定义如下：</p>
+<script type="math/tex; mode=display">\mathrm{EF}_{i,j}=-1000 \times \log_2 \mathrm{PPM}_{i,j}</script><p>$i,j$和$\mathrm{PPM}$于</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/deep-learning/" rel="tag"># deep_learning</a>
+            
+              <a href="/tags/bioinformation/" rel="tag"># bioinformation</a>
+            
+              <a href="/tags/ResNet/" rel="tag"># ResNet</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/29/read-DEMO-net/" rel="next" title="DEMO-net 阅读">
+                  <i class="fa fa-chevron-left"></i> DEMO-net 阅读
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Introduction"><span class="nav-number">2.</span> <span class="nav-text">1. Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Material-and-Methods"><span class="nav-number">3.</span> <span class="nav-text">2. Material and Methods</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Dataset"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 Dataset</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-protein-sequence-features"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 protein sequence features</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Position-specific-scoring-matrix-PSSM"><span class="nav-number">3.2.1.</span> <span class="nav-text">Position-specific scoring matrix PSSM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hidden-Markov-Model-profile"><span class="nav-number">3.2.2.</span> <span class="nav-text">Hidden Markov Model profile</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">GimCung Ho</p>
+  <div class="site-description" itemprop="description">stay hungry stay foolish</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">GimCung Ho</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+  
+
+  
+
+  
+
+</body>
+</html>
