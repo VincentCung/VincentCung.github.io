@@ -81,7 +81,7 @@
 <meta property="og:image" content="http://vincentcung.github.io/2020/02/20/translate-MemBrain/Fig8-1.png">
 <meta property="og:image" content="http://vincentcung.github.io/2020/02/20/translate-MemBrain/Fig8-2.png">
 <meta property="og:image" content="http://vincentcung.github.io/2020/02/20/translate-MemBrain/Table8.png">
-<meta property="og:updated_time" content="2020-02-22T11:49:55.661Z">
+<meta property="og:updated_time" content="2020-02-26T16:29:19.647Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="translation-MemBrain_3.0">
 <meta name="twitter:description" content="原文DOISCI-HUBAbstract跨膜蛋白(TMP transmembrane Protein)在很多生理过程中起着重要作用，如细胞识别以及细胞通讯中。他们的结构很难被获取但，同时对揭示细胞完整的功能很关键。有很多计算算法因此被发明用来填补从主序列预测结构的空白。在这个课题中，我们主要聚集于α螺旋的跨膜区段和发明了一个多尺度的深度学习管道——MemBrain 3.0来提高对拓扑结构的预测。这">
@@ -276,7 +276,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-22 11:49:55" itemprop="dateModified" datetime="2020-02-22T11:49:55Z">2020-02-22</time>
+                <time title="修改时间：2020-02-26 16:29:19" itemprop="dateModified" datetime="2020-02-26T16:29:19Z">2020-02-26</time>
               </span>
             
           
@@ -309,14 +309,14 @@
 
 <h1 id="Keywords"><a href="#Keywords" class="headerlink" title="Keywords"></a>Keywords</h1><p>Membrane protein; Bioinformatics; Structure prediction; Topology; Deep learning;<br>膜蛋白；生物信息；结构预测；拓扑结构；深度学习</p>
 <h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h1><p>膜是将细胞内部和外界环境隔开来的一道屏障。它由磷脂双分子层和大量的内嵌膜蛋白所组成。先前的课题已经展示了在整个蛋白质组(<code>proteome</code>)中有30%的蛋白质是膜蛋白。他们在一系列的生理过程中起着重要作用，如细胞信号传导、离子电导交换(<code>ion conductivity</code>)、细胞凝聚(<code>cell cohesion</code>)、细胞识别、细胞间通讯。因此很多药物被设计来通过定位膜蛋白来影响生理过程。绝大多数的膜蛋白都是α螺旋跨膜蛋白。他们常见于真核生物的细胞膜上、细菌细胞的内膜，甚至是在细菌的外膜。然而通过实验判别他们的应该依然具有挑战性，因为它(指蛋白)很难被溶解、提纯、结晶化，而且他们对于核磁共振光谱法(<code>NMR nuclear magnetic resonance spectroscopy</code>)而言结构过于庞大了。在测序技术快速发展下，已知序列和已发现结构的数量有所提升。根据对已知3D结构数据库中膜蛋白的统计，跨膜蛋白的已知结构对于PDB(<code>protein Data Bank</code>)中的所有结构只占 1.8% 以下。因此，迫切需要有能从序列中准确预测出跨膜蛋白结构的自动计算技术。</p>
-<p>三维结构预测通常有数个关键步骤实现。跨膜蛋白拓扑预测正是这预测过程中的一个步骤，它起着重要的作用。如在FILM3中，预测出的TMP拓扑结构被用来生成初始的构造。RosettaMembrane中也在能量函数设计也把预测出的TMP拓扑结构纳入考虑。这样优化会导致一致的低能量构象。</p>
+<p>三维结构预测通常由数个关键步骤实现。跨膜蛋白拓扑预测正是这预测过程中的一个步骤，它起着重要的作用。如在FILM3中，预测出的TMP拓扑结构被用来生成初始的构造。RosettaMembrane中也在能量函数设计也把预测出的TMP拓扑结构纳入考虑。这样优化会导致蛋白质共序的低能量构象。</p>
 <blockquote>
 <p>In this way,optimization leads to a consensus low-energy conformation.</p>
 </blockquote>
 <p>最近的课题都目睹了残基接触点协助的(<code>residue contact-assisted</code>)结构预测快速发展，TMP拓扑结构依然对这类预测提供着重要信息。举个例子，有文章报告了通过提供TMH簇的重要约束能够提高预测残基接触点结构的效果。TMP拓扑也显示出与残基接触点相关的优点。存在论文显示了预测残基接触点的准确性很大程度上取决于同源序列的数量，而对于TMP拓扑预测，只需要较少的同源序列。如HMM-TOP中最多只要50条同源序列就可以达到满意的表现。这个特性让拓扑预测能够为没有足够同源蛋白序列的膜蛋白推理出可靠的残基接触点这个困难的任务提供重要线索。</p>
-<p>TMP拓扑预测可以分为两个子任务：(1)TMH区段预测(2)跨膜方向的判断。过去的30年内，发展出了数十个TMH预测方法，他们能够分为三类：基于疏水性规模的方法(<code>hydrophobicity scale-based</code>)、基于机器学习的方法和基于集成的方法。</p>
-<p>第一类中，疏水性规模是重要的特征，因为埋在膜内和暴露在溶液中的残基具有不同的疏水性，滑窗可以用于捕捉邻近氨基酸的疏水性，对滑窗中的疏水性规模作平均可看作中间残基的疏水性规模，一个固定的阈值被用来区分中间的残基是否属于TMH区段。</p>
-<p>最近，基于机器学习的方法被广泛应用，对于数据驱动的统计模型被应用，如隐马可洛夫(HMM)、支持向量机、随机森林、k近邻。同时除了疏水性规模，试验中的一些进化信息也十分有用。TMSEG就是这个分类中的一个模型。TMSEG中的随机森林用了一个19个连续残基的滑窗的数据作为输入。包含有许多进化信息的位置特异分数矩阵(PSSM)也被应用。我们最初的版本的Membrain模型也属于这个分类。该模型利用从多序列比对获得的特征，应用被理论证明过的KNN算法进行分类。尽管这些模型在这一类有着优秀的效果，他们的表现很大程度依赖于提取的特征、应用的机器学习算法、相关的参数。</p>
+<p>TMP拓扑预测可以分为两个子任务：(1)TMH区段预测(2)跨膜方向的判断。过去的30年内，发展出了数十个TMH预测方法，他们能够分为三类：基于疏水性程度的方法(<code>hydrophobicity scale-based</code>)、基于机器学习的方法和基于集成的方法。</p>
+<p>第一类中，疏水性程度是重要的特征，因为埋在膜内和暴露在溶液中的残基具有不同的疏水性，滑窗可以用于捕捉邻近氨基酸的疏水性，对滑窗中的疏水性程度作平均可看作中间残基的疏水性程度，一个固定的阈值被用来区分中间的残基是否属于TMH区段。</p>
+<p>最近，基于机器学习的方法被广泛应用，对于数据驱动的统计模型被应用，如隐马可洛夫(HMM)、支持向量机、随机森林、k近邻。同时除了疏水性程度，试验中的一些进化信息也十分有用。TMSEG就是这个分类中的一个模型。TMSEG中的随机森林用了一个19个连续残基的滑窗的数据作为输入。包含有许多进化信息的位置特异分数矩阵(PSSM)也被应用。我们最初的版本的Membrain模型也属于这个分类。该模型利用从多序列比对获得的特征，应用被理论证明过的KNN算法进行分类。尽管这些模型在这一类有着优秀的效果，他们的表现很大程度依赖于提取的特征、应用的机器学习算法、相关的参数。</p>
 <p>一致性方法(<code>consensus method</code>)构成了第三类模型，实际上它是基于集成学习的模型。如TOPCONS中，对确定的蛋白质序列，先用OCTOPUS、SCAMPI-single、PRODIV-TMHMM和PRO-TMHMM生成最初的拓扑轮廓(<code>topology profile</code>)，然后通过动态规划算法和Viterbi算法从中得出一致性的预测。这些结果展示了对拥有高度相似度的蛋白质使用这些预测方法，使用集成框架能有效提高效果。</p>
 <p>拓扑预测的第二个子任务是方向的判定，对于每一个预测的TMH判断出其向内还是向外的朝向。最初，著名的正内原则(<code>postive-inside rule</code>)被应用且对后续的工作具有很长远的影响。这个原则指出细胞内侧的loop具有更多带正电的残基如<code>Lys，arg</code>。这之后，随着越来越多的可用数据，机器学习的算法被应用，如随机森林和支持向量机。TMSEG中随机森林取TMH开端(末端)8个残基和TMH前(或后)的15个残基作为输入。正电残基所占的百分比也作为特征之一被使用。在MEMSAT—SVM中，SVM使用35个残基大小的滑窗进行预测，判断中间的残基属于内侧还是外侧的loop。</p>
 <p>尽管在这个领域已有很多预测器，但还有空间提高，这个课题的动机有以下三点：尾端建模、最近深度学习取得的进步，困难的TMH段：<br>(1)大部分现存的预测器都是用完全嵌入膜中的TMH来训练。这意味着粘连在膜外的尾端被视为负样本。有报告指出这些尾端对生理过程有重要作用。如化学受体CCR5上的TMH1，2，3和7的尾端形成的洞被作为了HIV-1实体进入$\mathrm{CD4}^+$细胞的位点。一些抑制剂被设计用来阻止这个过程，他们通过阻塞这个交互位点而实现阻止。整合素$\mathrm{\alpha IIb\beta3}$复合体(integrin $\mathrm{\alpha IIb\beta3}$ complex)中，从内向外的跨膜信号传导由TMH尾端-talin F3复合体实现。人类bestrophin-1一个细菌同族体的结构中，一段具有长尾端的TMH链接了一个分散的胞质区域和TMH簇，他们共同组成了离子通道。ExbB 中的TMH2，6，7在细胞质中形成了一个巨大的闭合洞(<code>large enclosed cavity</code>)并能量传导具有重要作用。在SNARE中膜泡运输依赖于由syntaxin 1A尾端形成的SNARE复合体和沿着SNARE motif上的synaptiobrevin2。考虑到他们的重要作用，我们扩展建模的范围以覆盖尾端。</p>
@@ -371,7 +371,7 @@
 <blockquote>
 <p>我觉得这里还需要统计non-TMH的长度来决定非TMH窗口的大小。</p>
 </blockquote>
-<p>值得注意的是从非TMH中获得的两个结点。一个起始于TMH(氮端)的残基，另一个起始于非TMH(碳端)的残基。考虑到他们的差异性，基于两种结点训练了两个SVM即氮端SVM、碳端SVM。两个SVM的预测会被平均作为集成的结果。HMM profile和疏水性规模会被作为输入的特征。SVM的核函数选择rbf(<code>radial basis function</code>)，Gamma取1e-3，C取10。所有超参数都根据验证集的效果决定。SVM由sklearn库实现。</p>
+<p>值得注意的是从非TMH中获得的两个结点。一个起始于TMH(氮端)的残基，另一个起始于非TMH(碳端)的残基。考虑到他们的差异性，基于两种结点训练了两个SVM即氮端SVM、碳端SVM。两个SVM的预测会被平均作为集成的结果。HMM profile和疏水性规模会被作为输入的特征。SVM的核函数选择径向基函数(<code>radial basis function</code>)，Gamma取1e-3，C取10。所有超参数都根据验证集的效果决定。SVM由sklearn库实现。</p>
 <p>在试验中做预测时，我们采用集成的方法来提高效果，考虑到预测的TMH也具有不准确性。我们特意对每一个结点取5个候选不同大小的结点，对应在预测TMH取10，8，6，4，2个残基，在预测非TMH取3，5，7，9，11个残基，5个候选结点的取平均则视为原始的结点。</p>
 <h4 id="2-Stepwise-Max-Min-assignment-MMA-algorithm"><a href="#2-Stepwise-Max-Min-assignment-MMA-algorithm" class="headerlink" title="(2) Stepwise Max-Min assignment(MMA) algorithm"></a>(2) Stepwise Max-Min assignment(MMA) algorithm</h4><p>为了取代使用固定的阈值，我们提出使用一个新的stepwise极大极小分配策略来做判别。首选，对所有一个蛋白内所有的非RMH，其中最高(低)的设为内侧(外侧)，然后，把剩余的非TMH们设为内侧(外侧)，如果他们更接近最高(低)的那个TMH。这个算法的假设是蛋白质中至少有一个内侧非TMH和一个外侧非TMH。因为stepwiseMMA算法只关注预测分数的相对大小，所以它更加的鲁棒且根据我们的实验显示它能比固定阈值策略更有效。</p>
 <h2 id="2-4-Evaluation-measures"><a href="#2-4-Evaluation-measures" class="headerlink" title="2.4 Evaluation measures"></a>2.4 Evaluation measures</h2><p>为了评价效果，我们采用了一些测量指标，他们在先前的课题也同样被使用。</p>
